@@ -30,17 +30,20 @@ class CategoryController extends Controller
 
     public function edit(Category $category)
     {
-
+        return view('categories.edit', compact('category'));
     }
 
     public function update(UpdateCategoryRequest $request, Category $category)
     {
-
+        $category->update($request->validated());
+        return to_route('categories.index');
     }
 
     public function destroy(Category $category)
     {
+        $category->delete();
 
+        return redirect()->route('categories.index')->with('success','Category updated successfully');
     }
 
 
