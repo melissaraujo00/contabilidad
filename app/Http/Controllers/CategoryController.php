@@ -12,59 +12,36 @@ class CategoryController extends Controller
 {
     public function index()
     {
-        return Inertia::render('category/Index', [
-            'categories' => Category::all(),
-        ]);
+        $categories = Category::paginate(20);
+        return view('categories.index', compact('categories'));
     }
 
     public function create()
     {
-        // Obtener todas las categorías (si es necesario, se puede modificar)
-        $categories = Category::all(); // Si quieres pre-poblar con datos existentes, puedes hacer una consulta similar
-        // Devolver la vista de Inertia con las categorías
-        return Inertia::render('category/Create', [
-            'categories' => $categories
-        ]);
+        return view('categories.create');
     }
 
 
     public function store(StoreCategoryRequest $request)
     {
-        Category::query()->create($request->validated());
-
-        return redirect()->route('categories.index')->with('success', 'Category created successfully.');
+        Category::create($request->validated());
+        return to_route('categories.index');
     }
 
     public function edit(Category $category)
     {
-        return Inertia::render('Categories/Edit', [
-            'category' => $category,
-        ]);
+
     }
 
     public function update(UpdateCategoryRequest $request, Category $category)
     {
-        $category->update($request->validated());
 
-        return redirect()->route('categories.index')->with('success', 'Category updated successfully.');
     }
 
     public function destroy(Category $category)
     {
-        $category->delete();
+
     }
 
-    //  función para verificar duplicados en tiempo real
-    public function checkDuplicate(Request $request)
-    {
-        $name = $request->query('name');
 
-        if (!$name) {
-            return response()->json(['error' => 'El nombre es obligatorio'], 400);
-        }
-
-        $exists = Category::where('name', $name)->exists();
-
-        return response()->json(['exists' => $exists]);
-    }
 }
