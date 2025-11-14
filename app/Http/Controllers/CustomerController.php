@@ -32,7 +32,7 @@ class CustomerController extends Controller
      */
     public function store(StoreCustomerRequest $request)
     {
-        Customer::create($request->validate());
+        Customer::create($request->validated());
 
         return redirect()->route('customers.index')
             ->with('success', 'Cliente creado correctamente.');
@@ -52,17 +52,7 @@ class CustomerController extends Controller
      */
     public function update( UpdateCustomerRequest $request, Customer $customer)
     {
-        $request->validate([
-            'nombre'       => 'required|string|max:50',
-            'apellido'     => 'required|string|max:50',
-            'telefono'     => 'nullable|string|max:20',
-            'email'        => 'nullable|email|max:80',
-            'nit'          => 'nullable|string|max:20',
-            'direccion'    => 'nullable|string|max:150',
-            'tipo_cliente' => ['required', 'in:consumidor,juridico,proveedor'],
-        ]);
-
-        $customer->update($request->all());
+        $customer->update($request->validated());
 
         return redirect()->route('customers.index')
             ->with('success', 'Cliente actualizado correctamente.');
