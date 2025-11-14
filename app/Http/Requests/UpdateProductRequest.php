@@ -11,7 +11,7 @@ class UpdateProductRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -20,9 +20,37 @@ class UpdateProductRequest extends FormRequest
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
     public function rules(): array
-    {
-        return [
-            //
-        ];
-    }
+{
+    return [
+        'nombre' => [
+            'required',
+            'string',
+            'max:50',
+        ],
+
+        'precio' => [
+            'required',
+            'numeric',
+            'decimal:2', // o decimal:2,4 si quieres permitir 2 a 4 decimales
+        ],
+
+        'stock' => [
+            'required',
+            'integer',
+            'min:0',
+        ],
+
+        'category_id' => [
+            'required',
+            'exists:categories,id',
+        ],
+
+        'stockMinimun' => [
+            'required',
+            'integer',
+            'min:0',
+        ],
+    ];
+}
+
 }
