@@ -25,7 +25,7 @@ return new class extends Migration
                 ->on('catalogo_cuentas')
                 ->onDelete('cascade');
 
-            $table->boolean('is_active')->default(true);
+            $table->boolean('esta_activo')->default(true);
 
             $table->timestamps();
         });

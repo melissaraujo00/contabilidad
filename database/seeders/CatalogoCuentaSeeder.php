@@ -87,7 +87,7 @@ class CatalogoCuentaSeeder extends Seeder
         ];
 
         foreach ($cuentas as &$cuenta) {
-            $cuenta['is_active'] = 1;
+            $cuenta['esta_activo'] = 1;
             $cuenta['created_at'] = now();
             $cuenta['updated_at'] = now();
         }
