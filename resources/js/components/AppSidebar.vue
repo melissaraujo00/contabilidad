@@ -23,6 +23,11 @@ const mainNavItems: NavItem[] = [
         href: dashboard(),
         icon: LayoutGrid,
     },
+    {
+        title: 'Catalogo Cuentas',
+        href: '/catalogo-cuentas',
+        icon: BookOpen,
+    },
 ];
 
 const footerNavItems: NavItem[] = [
