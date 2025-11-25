@@ -79,6 +79,11 @@ class CatalogoCuentaSeeder extends Seeder
                 'cuenta' => 'Otros Títulos Valores',
                 'cuenta_padre_id' => 10,
             ],
+            [
+                'codigo' => '1103',
+                'cuenta' => 'UENTAS POR COBRAR',
+                'cuenta_padre_id' => 2,
+            ],
         ];
 
         foreach ($cuentas as &$cuenta) {
