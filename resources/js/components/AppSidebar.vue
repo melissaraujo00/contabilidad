@@ -28,6 +28,11 @@ const mainNavItems: NavItem[] = [
         href: '/catalogo-cuentas',
         icon: BookOpen,
     },
+    {
+        title: 'Empresa',
+        href: '/empresa',
+        icon: BookOpen,
+    },
 ];
 
 const footerNavItems: NavItem[] = [
