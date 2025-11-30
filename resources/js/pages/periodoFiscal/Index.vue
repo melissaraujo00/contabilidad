@@ -4,12 +4,12 @@ import { Head, Link } from '@inertiajs/vue3';
 import { type BreadcrumbItem } from '@/types';
 
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
 } from '@/components/ui/table'
 
 interface Empresa {
@@ -21,7 +21,7 @@ interface PeriodoFiscal {
     id: number;
     empresa: Empresa;
     fecha_inicio: string;
-    fecha_fin: string;
+    fecha_cierre: string;
     es_actual: boolean;
 }
 
@@ -45,6 +45,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 </script>
 
 <template>
+
     <Head title="Listado de Períodos Fiscales" />
 
     <AppLayout :breadcrumbs="breadcrumbs">
@@ -54,7 +55,7 @@ const breadcrumbs: BreadcrumbItem[] = [
             <div class="flex items-center justify-between mb-2">
                 <h1 class="font-bold text-xl">Períodos Fiscales</h1>
 
-               
+
             </div>
 
             <Table>
@@ -69,19 +70,13 @@ const breadcrumbs: BreadcrumbItem[] = [
                 </TableHeader>
 
                 <TableBody>
-                    <TableRow
-                        v-for="periodo in props.periodosFiscales.data"
-                        :key="periodo.id"
-                    >
+                    <TableRow v-for="periodo in props.periodosFiscales.data" :key="periodo.id">
                         <TableCell>{{ periodo.id }}</TableCell>
                         <TableCell>{{ periodo.empresa?.nombre }}</TableCell>
                         <TableCell>{{ new Date(periodo.fecha_inicio).toLocaleDateString() }}</TableCell>
-                        <TableCell>{{ new Date(periodo.fecha_fin).toLocaleDateString() }}</TableCell>
+                        <TableCell>{{ new Date(periodo.fecha_cierre).toLocaleDateString() }}</TableCell>
                         <TableCell>
-                            <span
-                                v-if="periodo.es_actual"
-                                class="text-green-600 font-semibold"
-                            >
+                            <span v-if="periodo.es_actual" class="text-green-600 font-semibold">
                                 Sí
                             </span>
                             <span v-else class="text-gray-500">No</span>
@@ -92,18 +87,12 @@ const breadcrumbs: BreadcrumbItem[] = [
 
             <!-- PAGINACIÓN -->
             <div class="mt-4 flex justify-center gap-2">
-                <Link
-                    v-for="link in props.periodosFiscales.links"
-                    :key="link.url ?? link.label"
-                    :href="link.url ?? ''"
-                    class="px-3 py-1 rounded border text-sm"
-                    :class="{
+                <Link v-for="link in props.periodosFiscales.links" :key="link.url ?? link.label" :href="link.url ?? ''"
+                    class="px-3 py-1 rounded border text-sm" :class="{
                         'bg-blue-600 text-white': link.active,
                         'text-gray-600': !link.active,
                         'opacity-50 cursor-not-allowed': !link.url
-                    }"
-                    v-html="link.label"
-                />
+                    }" v-html="link.label" />
             </div>
 
         </div>
