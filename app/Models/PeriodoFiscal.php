@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class PeriodoFiscal extends Model
 {
     use HasFactory;
+
     protected $fillable = [
         'fecha_inicio',
         'fecha_cierre',
@@ -17,10 +18,8 @@ class PeriodoFiscal extends Model
         'esta_cerrado'
     ];
 
-    public function empresa():BelongsTo
+    public function empresa(): BelongsTo
     {
-        return $this->belongsTo(Empresa::class, 'empresa_id')->withTrashed();
+        return $this->belongsTo(Empresa::class);
     }
-
-
 }
