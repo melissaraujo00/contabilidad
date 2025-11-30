@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import AppLayout from '@/layouts/AppLayout.vue';
 import { type BreadcrumbItem } from '@/types';
-import { Head } from '@inertiajs/vue3';
+import { Head, Link } from '@inertiajs/vue3';
 import {
   Table,
   TableBody,
@@ -29,7 +29,11 @@ interface Cuentas {
 }
 
 interface Props {
-    cuentas: Cuentas[]
+    cuentas: {
+        data: Cuentas[];
+        links: any[];
+        meta: any[];
+    }
 }
 
 const props = defineProps<Props>();
@@ -62,7 +66,7 @@ const breadcrumbs: BreadcrumbItem[] = [
       </TableRow>
     </TableHeader>
     <TableBody>
-      <TableRow v-for="catalogo in props.cuentas" :key="catalogo.id">
+      <TableRow v-for="catalogo in props.cuentas.data" :key="catalogo.id">
                         <TableCell>{{catalogo.id}}</TableCell>
                         <TableCell>{{catalogo.codigo}}</TableCell>
                         <TableCell>{{catalogo.cuenta}}</TableCell>
@@ -71,6 +75,24 @@ const breadcrumbs: BreadcrumbItem[] = [
       </TableRow>
     </TableBody>
   </Table>
+
+            <!-- PAGINACIÓN -->
+            <div class="mt-4 flex justify-center gap-2">
+                <Link
+                    v-for="link in props.cuentas.links"
+                    :key="link.url ?? link.label"
+                    :href="link.url ?? ''"
+                    class="px-3 py-1 rounded border text-sm"
+                    :class="{
+                        'bg-blue-600 text-white': link.active,
+                        'text-gray-600': !link.active,
+                        'opacity-50 cursor-not-allowed': !link.url
+                    }"
+                    v-html="link.label"
+                />
+            </div>
+
+
         </div>
     </AppLayout>
 </template>

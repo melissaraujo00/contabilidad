@@ -13,7 +13,7 @@ class CatalogoCuentaController extends Controller
         $cuentas = CatalogoCuenta::query()
             ->with('cuentaPadre')
             ->select('id', 'codigo', 'cuenta', 'cuenta_padre_id', 'esta_activo')
-            ->get();
+            ->paginate(25);
 
         return Inertia::render('catalogoCuentas/Index', compact('cuentas'));
     }
