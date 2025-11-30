@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Empresa;
+use App\Models\PeriodoFiscal;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Database\Factories\EmpresaFactory;
@@ -21,6 +22,7 @@ class DatabaseSeeder extends Seeder
             CatalogoCuentaSeeder::class,
         ]);
 
-        EmpresaFactory::new()->count(20)->create();
+        Empresa::factory()->count(20)->create();
+        PeriodoFiscal::factory()->count(50)->create();
     }
 }

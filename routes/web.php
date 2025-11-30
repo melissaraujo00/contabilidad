@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\CatalogoCuentaController;
 use App\Http\Controllers\EmpresaControlador;
-use App\Models\Empresa;
+use App\Http\Controllers\PeriodoFiscalController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Laravel\Fortify\Features;
@@ -20,6 +20,8 @@ Route::get('dashboard', function () {
 Route::resource('catalogo-cuentas', CatalogoCuentaController::class)->only('index');
 
 Route::resource('empresa', EmpresaControlador::class);
+
+Route::resource('periodo-fiscal', PeriodoFiscalController::class);
 
 
 require __DIR__ . '/settings.php';

@@ -33,6 +33,11 @@ const mainNavItems: NavItem[] = [
         href: '/empresa',
         icon: BookOpen,
     },
+    {
+        title: 'Perido Fiscal',
+        href: '/periodo-fiscal',
+        icon: BookOpen,
+    },
 ];
 
 const footerNavItems: NavItem[] = [
