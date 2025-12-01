@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CatalogoCuentaController;
 use App\Http\Controllers\EmpresaControlador;
+use App\Http\Controllers\PartidaController;
 use App\Http\Controllers\PeriodoFiscalController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -22,6 +23,8 @@ Route::resource('catalogo-cuentas', CatalogoCuentaController::class)->only('inde
 Route::resource('empresa', EmpresaControlador::class);
 
 Route::resource('periodo-fiscal', PeriodoFiscalController::class);
+
+Route::resource('partidas', PartidaController::class);
 
 
 require __DIR__ . '/settings.php';
