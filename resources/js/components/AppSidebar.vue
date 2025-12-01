@@ -14,7 +14,7 @@ import {
 import { dashboard } from '@/routes';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/vue3';
-import { BookOpen, Folder, LayoutGrid } from 'lucide-vue-next';
+import { BookOpen, Folder, LayoutGrid, BookOpenText, Building, CalendarDays } from 'lucide-vue-next';
 import AppLogo from './AppLogo.vue';
 
 const mainNavItems: NavItem[] = [
@@ -31,12 +31,17 @@ const mainNavItems: NavItem[] = [
     {
         title: 'Empresa',
         href: '/empresa',
-        icon: BookOpen,
+        icon: Building,
     },
     {
-        title: 'Perido Fiscal',
+        title: 'Periodo Fiscal',
         href: '/periodo-fiscal',
-        icon: BookOpen,
+        icon: CalendarDays,
+    },
+    {
+        title: 'Partidas',
+        href: '/partidas',
+        icon: BookOpenText,
     },
 ];
 
@@ -61,7 +66,7 @@ const footerNavItems: NavItem[] = [
                 <SidebarMenuItem>
                     <SidebarMenuButton size="lg" as-child>
                         <Link :href="dashboard()">
-                            <AppLogo />
+                        <AppLogo />
                         </Link>
                     </SidebarMenuButton>
                 </SidebarMenuItem>
