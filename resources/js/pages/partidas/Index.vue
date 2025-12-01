@@ -48,15 +48,22 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 <template>
 
-    <Head title="Partidas" />
+    <Head title="Listado de Partidas" />
 
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4 bg-white dark:bg-black">
             <header class="flex items-center justify-between">
                 <h1 class="text-2xl font-bold text-gray-900 dark:text-white">
-                    Partidas
+                    Listado de Partidas
                 </h1>
             </header>
+
+            <div class="flex items-center justify-between">
+                <Link href="/partidas/create"
+                    class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded text-sm font-medium transition-colors">
+                Crear Partida
+                </Link>
+            </div>
 
             <div class="bg-white dark:bg-black rounded-lg shadow-sm border border-gray-200 dark:border-gray-800">
                 <Table>
@@ -66,13 +73,19 @@ const breadcrumbs: BreadcrumbItem[] = [
                                 ID
                             </TableHead>
                             <TableHead class="w-32 font-semibold text-gray-700 dark:text-gray-300">
-                                Código
+                                Partida #
                             </TableHead>
                             <TableHead class="font-semibold text-gray-700 dark:text-gray-300">
-                                Cuenta
+                                Fecha Partida
                             </TableHead>
                             <TableHead class="font-semibold text-gray-700 dark:text-gray-300">
-                                Cuenta Padre
+                                Tipo
+                            </TableHead>
+                            <TableHead class="w-32 font-semibold text-gray-700 dark:text-gray-300">
+                                Total Debe
+                            </TableHead>
+                            <TableHead class="w-32 font-semibold text-gray-700 dark:text-gray-300">
+                                Total Haber
                             </TableHead>
                             <TableHead class="w-32 font-semibold text-gray-700 dark:text-gray-300">
                                 Estado

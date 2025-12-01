@@ -14,4 +14,12 @@ class PartidaController extends Controller
     {
         return Inertia::render('partidas/Index');
     }
+
+    /**
+     * @return Response
+     */
+    public function create(): Response
+    {
+        return Inertia::render('partidas/Create');
+    }
 }
