@@ -16,4 +16,9 @@ class Partida extends Model
         'total_debe',
         'total_haber'
     ];
+
+     public function detalles()
+    {
+        return $this->hasMany(PartidaDetalle::class);
+    }
 }

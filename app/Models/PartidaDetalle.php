@@ -21,8 +21,14 @@ class PartidaDetalle extends Model
     /**
      * @return BelongsTo<Partida,PartidaDetalle>
      */
-    public function partida(): BelongsTo
+     public function partida()
     {
         return $this->belongsTo(Partida::class);
     }
+
+    public function catalogoCuenta()
+    {
+        return $this->belongsTo(CatalogoCuenta::class);
+    }
+
 }

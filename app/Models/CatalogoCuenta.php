@@ -39,4 +39,9 @@ class CatalogoCuenta extends Model
     {
         return $this->hasMany(CatalogoCuenta::class, 'cuenta_padre_id');
     }
+
+    public function partidaDetalles()
+    {
+        return $this->hasMany(PartidaDetalle::class);
+    }
 }
