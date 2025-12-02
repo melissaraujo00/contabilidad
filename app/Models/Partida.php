@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\TipoPartida;
 use Illuminate\Database\Eloquent\Model;
 
 class Partida extends Model
@@ -17,8 +18,13 @@ class Partida extends Model
         'total_haber'
     ];
 
-     public function detalles()
+    public function detalles()
     {
         return $this->hasMany(PartidaDetalle::class);
+    }
+
+    public function periodoFiscal()
+    {
+        return $this->belongsTo(PeriodoFiscal::class);
     }
 }

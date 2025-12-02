@@ -13,7 +13,7 @@ class CatalogoCuenta extends Model
         'cuenta',
         'tipo_cuenta_id',
         'cuenta_padre_id',
-        'is_active'
+        'esta_activo'
     ];
 
     /**
