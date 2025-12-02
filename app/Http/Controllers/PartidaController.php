@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Enums\TipoPartida;
 use App\Http\Requests\StorePartidaRequest;
+use App\Models\CatalogoCuenta;
 use App\Models\Partida;
 use App\Models\PeriodoFiscal;
 use Inertia\Inertia;
@@ -40,7 +41,12 @@ class PartidaController extends Controller
             ];
         });
 
-        return Inertia::render('partidas/Create', compact('periodos', 'tiposPartida'));
+        $cuentas = CatalogoCuenta::query()
+            ->where('esta_activo', true)
+            ->orderBy('codigo')
+            ->get(['id', 'codigo', 'cuenta', 'tipo_cuenta']);
+
+        return Inertia::render('partidas/Create', compact('periodos', 'tiposPartida', 'cuentas'));
     }
 
     public function store(StorePartidaRequest $request)
