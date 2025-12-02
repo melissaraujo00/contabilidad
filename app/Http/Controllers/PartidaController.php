@@ -44,7 +44,7 @@ class PartidaController extends Controller
         $cuentas = CatalogoCuenta::query()
             ->where('esta_activo', true)
             ->orderBy('codigo')
-            ->get(['id', 'codigo', 'cuenta', 'tipo_cuenta']);
+            ->get(['id', 'codigo', 'cuenta', 'tipo_cuenta_id']);
 
         return Inertia::render('partidas/Create', compact('periodos', 'tiposPartida', 'cuentas'));
     }
