@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import AppLayout from '@/layouts/AppLayout.vue';
 import { type BreadcrumbItem } from '@/types';
-import { Head, Link } from '@inertiajs/vue3';
+import { Head, Link, usePage } from '@inertiajs/vue3';
 import {
     Table,
     TableBody,
@@ -11,32 +11,7 @@ import {
     TableRow,
 } from '@/components/ui/table'
 
-// interface CuentaPadre {
-//   id: number;
-//   codigo: string;
-//   cuenta: string;
-//   cuenta_padre_id: number | null;
-//   esta_activo: boolean;
-// }
-//
-// interface Cuenta {
-//   id: number;
-//   codigo: string;
-//   cuenta: string;
-//   cuenta_padre_id: number | null;
-//   esta_activo: boolean;
-//   cuenta_padre?: CuentaPadre;
-// }
-//
-// interface Props {
-//   cuentas: {
-//     data: Cuenta[];
-//     links: any[];
-//     meta: any[];
-//   };
-// }
-
-// const props = defineProps<Props>();
+const { partidas } = usePage().props
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -79,6 +54,9 @@ const breadcrumbs: BreadcrumbItem[] = [
                                 Fecha Partida
                             </TableHead>
                             <TableHead class="font-semibold text-gray-700 dark:text-gray-300">
+                               Periodo Fiscal
+                            </TableHead>
+                            <TableHead class="font-semibold text-gray-700 dark:text-gray-300">
                                 Tipo
                             </TableHead>
                             <TableHead class="w-32 font-semibold text-gray-700 dark:text-gray-300">
@@ -92,6 +70,48 @@ const breadcrumbs: BreadcrumbItem[] = [
                             </TableHead>
                         </TableRow>
                     </TableHeader>
+          <TableBody>
+            <TableRow
+              v-for="partida in partidas.data"
+              :key="partida.id"
+              class="hover:bg-gray-50/50 dark:hover:bg-gray-900/50 transition-colors duration-150 border-b border-gray-200 dark:border-gray-800"
+            >
+              <TableCell class="font-medium text-gray-600 dark:text-gray-400">
+                {{ partida.id }}
+              </TableCell>
+              <TableCell class="font-mono text-sm text-blue-600 dark:text-blue-400">
+                {{ partida.partida_numero }}
+              </TableCell>
+              <TableCell class="text-gray-800 dark:text-gray-200">
+                {{ partida.fecha_partida }}
+              </TableCell>
+              <TableCell class="text-gray-600 dark:text-gray-400">
+                {{ partida.periodoFiscal?.fecha_inicio ?? '' }} -
+                {{ partida.periodoFiscal?.fecha_cierre ?? '' }}
+              </TableCell>
+              <TableCell class="text-gray-600 dark:text-gray-400">
+                {{ partida.tipo_partida }}
+              </TableCell>
+              <TableCell class="text-gray-600 dark:text-gray-400">
+                $ {{ partida.total_debe }}
+              </TableCell>
+              <TableCell class="text-gray-600 dark:text-gray-400">
+                $ {{ partida.total_haber }}
+              </TableCell>
+              <TableCell>
+                <span
+                  :class="[
+                    'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium',
+                    partida.estado
+                      ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
+                      : 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400'
+                  ]"
+                >
+                  {{ partida.estado ? 'Activa' : 'Inactiva' }}
+                </span>
+              </TableCell>
+            </TableRow>
+          </TableBody>
                 </Table>
             </div>
         </div>
