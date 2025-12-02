@@ -6,12 +6,26 @@ import { object, string, boolean } from 'yup';
 import { ref, computed } from 'vue';
 
 interface Empresa { id: number; nombre: string; }
-interface Props { empresas: Empresa[]; }
+interface PeriodoFiscal {
+    id: number;
+    empresa_id: number;
+    fecha_inicio: string;
+    fecha_cierre: string;
+    ejercicio_fiscal: string;
+    esta_cerrado: boolean;
+}
+interface Props {
+    empresas: Empresa[];
+    periodoFiscal: PeriodoFiscal;
+}
 
 const props = defineProps<Props>();
 const form = useForm({
-    empresa_id: '', fecha_inicio: '', fecha_cierre: '',
-    ejercicio_fiscal: '', esta_cerrado: false,
+    empresa_id: props.periodoFiscal.empresa_id.toString(),
+    fecha_inicio: props.periodoFiscal.fecha_inicio,
+    fecha_cierre: props.periodoFiscal.fecha_cierre,
+    ejercicio_fiscal: props.periodoFiscal.ejercicio_fiscal,
+    esta_cerrado: Boolean(props.periodoFiscal.esta_cerrado),
 });
 
 const schema = object({
@@ -60,15 +74,15 @@ const autoGenerar = () => {
 const submit = async () => {
     if (!(await validate())) return;
     form.transform(d => ({ ...d, empresa_id: Number(d.empresa_id), esta_cerrado: d.esta_cerrado ? 1 : 0 }))
-        .post('/periodo-fiscal', {
-            onSuccess: () => { form.reset(); errors.value = {}; },
+        .put(`/periodo-fiscal/${props.periodoFiscal.id}`, {
+            onSuccess: () => { errors.value = {}; },
             preserveScroll: true,
         });
 };
 
 const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Períodos Fiscales', href: '/periodo-fiscal' },
-    { title: 'Crear Período Fiscal', href: '/periodo-fiscal/create' },
+    { title: 'Editar Período Fiscal', href: `/periodo-fiscal/${props.periodoFiscal.id}/edit` },
 ];
 
 const today = new Date().toISOString().split('T')[0];
@@ -78,23 +92,16 @@ const duracion = computed(() => form.fecha_inicio && form.fecha_cierre ?
     Math.ceil((new Date(form.fecha_cierre).getTime() - new Date(form.fecha_inicio).getTime()) / 86400000) + 1 : 0);
 const formatFecha = (f: string) => f ? new Date(f + 'T00:00:00').toLocaleDateString('es-ES',
     { day: '2-digit', month: 'long', year: 'numeric' }) : '';
-
-const Field = ({ label, req = false, error }: any) => `
-    <label class="text-sm font-medium text-gray-900 dark:text-white">
-        ${label} ${req ? '<span class="text-red-500">*</span>' : ''}
-    </label>
-    ${error ? `<div class="text-red-600 dark:text-red-400 text-sm">${error}</div>` : ''}
-`;
 </script>
 
 <template>
-    <Head title="Crear Período Fiscal" />
+    <Head title="Editar Período Fiscal" />
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="flex flex-col gap-6 p-6">
             <div class="flex items-center justify-between">
                 <div>
-                    <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Crear Nuevo Período Fiscal</h1>
-                    <p class="text-gray-600 dark:text-gray-400 mt-1">Complete la información para registrar un nuevo período fiscal</p>
+                    <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Editar Período Fiscal</h1>
+                    <p class="text-gray-600 dark:text-gray-400 mt-1">Modifica la información del período fiscal</p>
                 </div>
                 <Link href="/periodo-fiscal" class="px-4 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600 rounded-md text-sm font-medium">
                     ← Volver
@@ -168,7 +175,7 @@ const Field = ({ label, req = false, error }: any) => `
                                     <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                                     <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                                 </svg>
-                                {{ form.processing ? 'Guardando...' : 'Crear Período Fiscal' }}
+                                {{ form.processing ? 'Guardando...' : 'Actualizar Período Fiscal' }}
                             </button>
                             <Link href="/periodo-fiscal" class="px-4 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600 rounded-md text-sm font-medium">Cancelar</Link>
                         </div>

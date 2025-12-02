@@ -15,7 +15,7 @@ class EmpresaControlador extends Controller
     {
         $empresas = Empresa::select('id', 'nombre', 'tipo_empresa', 'created_at')
             ->orderBy('created_at', 'desc')
-            ->get();
+            ->paginate(10);
 
         return Inertia::render('empresa/Index', [
             'empresas' => $empresas,

@@ -4,9 +4,22 @@ import { Head, Link, useForm } from "@inertiajs/vue3";
 import { object, string } from 'yup';
 import { ref, computed } from 'vue';
 
+interface Empresa {
+    id: number;
+    nombre: string;
+    tipo_empresa: string;
+}
+
+interface Props {
+    empresa: Empresa;
+    tiposEmpresa: string[];
+}
+
+const props = defineProps<Props>();
+
 const form = useForm({
-    nombre: "",
-    tipo_empresa: "",
+    nombre: props.empresa.nombre,
+    tipo_empresa: props.empresa.tipo_empresa,
 });
 
 const schema = object({
@@ -53,13 +66,13 @@ const tipos = [
 
 const breadcrumbs = [
     { title: 'Empresas', href: '/empresa' },
-    { title: 'Crear Empresa', href: '/empresa/create' },
+    { title: 'Editar Empresa', href: `/empresa/${props.empresa.id}/edit` },
 ];
 
 const submit = async () => {
     if (!(await validate())) return;
-    form.post("/empresa", {
-        onSuccess: () => { form.reset(); errors.value = {}; },
+    form.put(`/empresa/${props.empresa.id}`, {
+        onSuccess: () => { errors.value = {}; },
         preserveScroll: true,
     });
 };
@@ -68,13 +81,13 @@ const isValid = computed(() => !Object.keys(errors.value).length && form.nombre 
 </script>
 
 <template>
-    <Head title="Crear Empresa" />
+    <Head title="Editar Empresa" />
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="flex flex-col gap-6 p-6">
             <div class="flex items-center justify-between">
                 <div>
-                    <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Crear Nueva Empresa</h1>
-                    <p class="text-gray-600 dark:text-gray-400 mt-1">Complete la información para registrar una nueva empresa</p>
+                    <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Editar Empresa</h1>
+                    <p class="text-gray-600 dark:text-gray-400 mt-1">Modifica la información de la empresa</p>
                 </div>
                 <Link href="/empresa" class="px-4 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600 rounded-md text-sm font-medium">
                     ← Volver
@@ -139,7 +152,7 @@ const isValid = computed(() => !Object.keys(errors.value).length && form.nombre 
                                     <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                                     <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                                 </svg>
-                                {{ form.processing ? 'Guardando...' : 'Crear Empresa' }}
+                                {{ form.processing ? 'Guardando...' : 'Actualizar Empresa' }}
                             </button>
                             <Link href="/empresa" class="px-4 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600 rounded-md text-sm font-medium transition-colors">
                                 Cancelar
