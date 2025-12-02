@@ -41,7 +41,6 @@ const breadcrumbs: BreadcrumbItem[] = [
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
 
-            <!-- Encabezado con título y botón en línea -->
             <div class="flex items-center justify-between">
                 <h1 class="font-bold text-xl">Empresas Registradas</h1>
                 <Link

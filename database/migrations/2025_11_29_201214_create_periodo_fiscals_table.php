@@ -17,7 +17,7 @@ return new class extends Migration
             $table->date('fecha_inicio');
             $table->date('fecha_cierre');
             $table->foreignIdFor(Empresa::class)->nullable()->constrained();
-            $table->string('ejercicio_fiscal', 45);
+            $table->string('ejercicio_fiscal', 45)->nullable();
             $table->tinyInteger('esta_cerrado');
             $table->timestamps();
         });

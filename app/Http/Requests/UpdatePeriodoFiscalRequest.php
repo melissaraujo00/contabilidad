@@ -19,7 +19,6 @@ class UpdatePeriodoFiscalRequest extends FormRequest
             'empresa_id' => 'required|exists:empresas,id',
             'ejercicio_fiscal' => 'required|string|max:45',
             'esta_cerrado' => 'required|boolean',
-            // Eliminar 'es_actual' de las reglas de validación
         ];
     }
 }
