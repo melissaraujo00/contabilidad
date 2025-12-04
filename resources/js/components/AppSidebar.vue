@@ -17,6 +17,7 @@ import { Link } from '@inertiajs/vue3';
 import { BookOpen, Folder, LayoutGrid, BookOpenText, Building, CalendarDays } from 'lucide-vue-next';
 import AppLogo from './AppLogo.vue';
 
+
 const mainNavItems: NavItem[] = [
     {
         title: 'Dashboard',
@@ -43,6 +44,11 @@ const mainNavItems: NavItem[] = [
         href: '/partidas',
         icon: BookOpenText,
     },
+    {
+        title: 'Libro Mayor',
+        href: '/libro-mayor',
+        icon: BookOpen,
+    }
 ];
 
 const footerNavItems: NavItem[] = [
