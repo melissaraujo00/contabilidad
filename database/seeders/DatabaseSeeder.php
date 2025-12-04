@@ -22,7 +22,5 @@ class DatabaseSeeder extends Seeder
             CatalogoCuentaSeeder::class,
         ]);
 
-        Empresa::factory()->count(20)->create();
-        PeriodoFiscal::factory()->count(50)->create();
     }
 }

@@ -48,7 +48,12 @@ const mainNavItems: NavItem[] = [
         title: 'Libro Mayor',
         href: '/libro-mayor',
         icon: BookOpen,
-    }
+    },
+    {
+        title: 'Balance General',
+        href: '/balance-general',
+        icon: BookOpen,
+    },
 ];
 
 const footerNavItems: NavItem[] = [

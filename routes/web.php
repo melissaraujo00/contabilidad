@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BalanceGeneralController;
 use App\Http\Controllers\CatalogoCuentaController;
 use App\Http\Controllers\EmpresaControlador;
 use App\Http\Controllers\LibroMayorController;
@@ -27,6 +28,7 @@ Route::resource('periodo-fiscal', PeriodoFiscalController::class);
 
 Route::resource('partidas', PartidaController::class);
 Route::resource('libro-mayor', LibroMayorController::class);
+Route::resource('balance-general',BalanceGeneralController::class);
 
 
 require __DIR__ . '/settings.php';

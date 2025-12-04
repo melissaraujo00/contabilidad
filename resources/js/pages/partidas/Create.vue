@@ -206,8 +206,25 @@ const breadcrumbs: BreadcrumbItem[] = [
                                         </div>
                                     </td>
                                     <td class="px-4 py-2">
-                                        <Input v-model.number="detalle.parcial" type="number" step="0.01"
-                                            class="w-24 text-right" />
+                                        <div class="flex flex-col gap-1">
+                                            <Input
+                                                v-model.number="detalle.parcial"
+                                                type="number"
+                                                step="0.01"
+                                                class="w-24 text-right"
+                                                placeholder="0.00"
+                                            />
+
+                                            <select
+                                                v-if="detalle.parcial > 0 && !detalle.monto_debe && !detalle.monto_haber"
+                                                v-model="detalle.tipo_movimiento"
+                                                class="text-xs border rounded px-1 py-0.5 bg-yellow-50 text-yellow-800 border-yellow-200"
+                                            >
+                                                <option value="" disabled>¿D/H?</option>
+                                                <option value="DEBE">Debe (+)</option>
+                                                <option value="HABER">Haber (-)</option>
+                                            </select>
+                                        </div>
                                     </td>
 
                                     <td class="px-4 py-2 text-right">

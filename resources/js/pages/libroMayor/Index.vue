@@ -21,8 +21,14 @@ const form = ref({
 const filtrar = () => {
     router.get('/libro-mayor', form.value, { preserveState: true, replace: true });
 };
-</script>
 
+const formatNumber = (value: number | string) => {
+    return new Intl.NumberFormat('en-US', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    }).format(Number(value));
+};
+</script>
 <template>
     <Head title="Libro Mayor" />
 
@@ -61,7 +67,7 @@ const filtrar = () => {
                         </h3>
                         <div class="text-sm font-mono">
                             Saldo: <span :class="cuenta.saldo_final >= 0 ? 'text-green-600' : 'text-red-600'">
-                                $ {{ Number(cuenta.saldo_final).toFixed(2) }}
+                                $ {{ formatNumber(cuenta.saldo_final) }}
                             </span>
                         </div>
                     </div>
@@ -81,15 +87,37 @@ const filtrar = () => {
                                 <td class="p-2">{{ mov.fecha }}</td>
                                 <td class="p-2 font-mono text-blue-600">#{{ mov.partida_numero }}</td>
                                 <td class="p-2">{{ mov.concepto }}</td>
-                                <td class="p-2 text-right text-gray-600">{{ Number(mov.debe) > 0 ? '$ ' + Number(mov.debe).toFixed(2) : '-' }}</td>
-                                <td class="p-2 text-right text-gray-600">{{ Number(mov.haber) > 0 ? '$ ' + Number(mov.haber).toFixed(2) : '-' }}</td>
+                                <td class="p-2 text-right text-gray-600">
+                                    {{ Number(mov.debe) > 0 ? '$ ' + formatNumber(mov.debe) : '-' }}
+                                </td>
+                                <td class="p-2 text-right text-gray-600">
+                                    {{ Number(mov.haber) > 0 ? '$ ' + formatNumber(mov.haber) : '-' }}
+                                </td>
                             </tr>
                         </tbody>
+
                         <tfoot class="bg-gray-50 font-semibold border-t-2 border-gray-200">
                             <tr>
-                                <td colspan="3" class="p-2 text-right">Totales del Periodo:</td>
-                                <td class="p-2 text-right">$ {{ Number(cuenta.total_debe).toFixed(2) }}</td>
-                                <td class="p-2 text-right">$ {{ Number(cuenta.total_haber).toFixed(2) }}</td>
+                                <td colspan="3" class="p-2 text-right text-gray-600">Sumas del Periodo:</td>
+                                <td class="p-2 text-right border-t border-gray-300">
+                                    $ {{ formatNumber(cuenta.total_debe) }}
+                                </td>
+                                <td class="p-2 text-right border-t border-gray-300">
+                                    $ {{ formatNumber(cuenta.total_haber) }}
+                                </td>
+                            </tr>
+
+                            <tr class="bg-blue-50 dark:bg-blue-900/20 border-t border-blue-200">
+                                <td colspan="3" class="p-2 text-right font-bold text-gray-800 dark:text-gray-200">
+                                    Saldo Actual:
+                                </td>
+                                <td colspan="2" class="p-2 text-center font-bold text-lg"
+                                    :class="cuenta.saldo_final >= 0 ? 'text-green-600' : 'text-red-600'">
+                                    $ {{ formatNumber(Math.abs(cuenta.saldo_final)) }}
+                                    <span class="text-xs font-normal text-gray-500 ml-1">
+                                        ({{ cuenta.saldo_final >= 0 ? 'Deudor' : 'Acreedor' }})
+                                    </span>
+                                </td>
                             </tr>
                         </tfoot>
                     </table>

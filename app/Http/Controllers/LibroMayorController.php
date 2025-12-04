@@ -14,7 +14,6 @@ class LibroMayorController extends Controller
         $fechaFin = $request->input('fecha_fin', date('Y-m-t'));
         $cuentaId = $request->input('cuenta_id');
 
-        // 1. CAMBIO AQUÍ: Usamos 'partidaDetalles' en lugar de 'detalles'
         $query = CatalogoCuenta::query()
             ->with(['partidaDetalles' => function ($q) use ($fechaInicio, $fechaFin) {
                 $q->whereHas('partida', function ($p) use ($fechaInicio, $fechaFin) {
@@ -33,32 +32,37 @@ class LibroMayorController extends Controller
         }
 
         $cuentas = $query->paginate(10);
-
         $cuentas->getCollection()->transform(function ($cuenta) {
-            // 2. CAMBIO AQUÍ: Usamos $cuenta->partidaDetalles
             $detalles = $cuenta->partidaDetalles;
 
-            $totalDebe = $detalles->where('tipo_movimiento', 'DEBE')->sum('monto_debe');
-            $totalHaber = $detalles->where('tipo_movimiento', 'HABER')->sum('monto_haber');
+            $movimientosProcesados = $detalles->map(function ($d) {
+                $debe = $d->monto_debe;
+                $haber = $d->monto_haber;
+                if ((float)$debe == 0 && (float)$haber == 0 && (float)$d->parcial > 0) {
+                    if ($d->tipo_movimiento === 'DEBE') {
+                        $debe = $d->parcial;
+                    } elseif ($d->tipo_movimiento === 'HABER') {
+                        $haber = $d->parcial;
+                    }
+                }
 
-            // Lógica básica: Saldo Deudor (Debe - Haber)
-            // Si tuvieras lógica de cuentas acreedoras, aquí harías el if/else
+                return [
+                    'fecha' => $d->partida->fecha_partida,
+                    'partida_numero' => $d->partida->partida_numero,
+                    'concepto' => $d->partida->description,
+                    'debe' => $debe,
+                    'haber' => $haber,
+                ];
+            });
+            $totalDebe = $movimientosProcesados->sum('debe');
+            $totalHaber = $movimientosProcesados->sum('haber');
             $saldo = $totalDebe - $totalHaber;
 
             return [
                 'id' => $cuenta->id,
                 'codigo' => $cuenta->codigo,
                 'nombre' => $cuenta->cuenta,
-                // 3. CAMBIO AQUÍ: Mapeamos partidaDetalles
-                'movimientos' => $detalles->map(function ($d) {
-                    return [
-                        'fecha' => $d->partida->fecha_partida,
-                        'partida_numero' => $d->partida->partida_numero,
-                        'concepto' => $d->partida->description,
-                        'debe' => $d->monto_debe,
-                        'haber' => $d->monto_haber,
-                    ];
-                }),
+                'movimientos' => $movimientosProcesados,
                 'total_debe' => $totalDebe,
                 'total_haber' => $totalHaber,
                 'saldo_final' => $saldo
