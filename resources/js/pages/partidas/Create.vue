@@ -10,6 +10,7 @@ import { store } from '@/actions/App/Http/Controllers/PartidaController';
 import { computed } from 'vue';
 import { Trash2, Plus, AlertTriangle } from 'lucide-vue-next';
 
+const page = usePage();
 const { periodos, tiposPartida, cuentas } = usePage().props;
 
 interface DetallePartida {
@@ -89,6 +90,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 
 <template>
+
     <Head title="Listado de Partidas" />
 
     <AppLayout :breadcrumbs="breadcrumbs">
@@ -100,7 +102,8 @@ const breadcrumbs: BreadcrumbItem[] = [
             </header>
 
             <!-- Alerta cuando no está balanceada -->
-            <div v-if="!estaBalanceada && totalDebe > 0" class="flex items-center gap-2 p-4 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg">
+            <div v-if="!estaBalanceada && totalDebe > 0"
+                class="flex items-center gap-2 p-4 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg">
                 <AlertTriangle class="w-5 h-5 text-yellow-600 dark:text-yellow-500" />
                 <p class="text-sm text-yellow-800 dark:text-yellow-200">
                     La partida no está balanceada. Diferencia: <strong>{{ diferencia.toFixed(2) }}</strong>
@@ -112,11 +115,17 @@ const breadcrumbs: BreadcrumbItem[] = [
                     <div class="w-full md:w-1/3 space-y-4">
                         <Label>Partida #</Label>
                         <Input v-model="form.partida_numero" type="number" placeholder="partida #" />
+                        <div v-if="page.props.errors.partida_numero" class="text-red-600 dark:text-red-400 text-sm">
+                            {{ page.props.errors.partida_numero }}
+                        </div>
                     </div>
 
                     <div class="w-full md:w-1/3 space-y-4">
                         <Label>Fecha</Label>
                         <Input v-model="form.fecha_partida" type="date" />
+                        <div v-if="page.props.errors.fecha_partida" class="text-red-600 dark:text-red-400 text-sm">
+                            {{ page.props.errors.fecha_partida }}
+                        </div>
                     </div>
 
                     <div class="w-full md:w-1/3 space-y-4">
@@ -127,6 +136,9 @@ const breadcrumbs: BreadcrumbItem[] = [
                                 {{ tipo.label }}
                             </option>
                         </select>
+                        <div v-if="page.props.errors.tipo_partida" class="text-red-600 dark:text-red-400 text-sm">
+                            {{ page.props.errors.tipo_partida }}
+                        </div>
                     </div>
                 </div>
 
@@ -139,6 +151,9 @@ const breadcrumbs: BreadcrumbItem[] = [
                                 {{ p.fecha_inicio }} - {{ p.fecha_cierre }}
                             </option>
                         </select>
+                        <div v-if="page.props.errors.periodo_fiscal_id" class="text-red-600 dark:text-red-400 text-sm">
+                            {{ page.props.errors.periodo_fiscal_id }}
+                        </div>
                     </div>
 
                     <div class="w-full md:w-1/3 space-y-4">
@@ -178,12 +193,17 @@ const breadcrumbs: BreadcrumbItem[] = [
                                 <tr v-for="(detalle, index) in form.detalles" :key="index" class="border-t">
                                     <td class="px-4 py-2">{{ detalle.orden }}</td>
                                     <td class="px-4 py-2">
-                                        <select v-model="detalle.catalogo_cuenta_id" class="w-full px-2 py-1 border rounded-md min-w-[300px]">
+                                        <select v-model="detalle.catalogo_cuenta_id"
+                                            class="w-full px-2 py-1 border rounded-md min-w-[300px]">
                                             <option value="">Seleccione cuenta</option>
                                             <option v-for="c in cuentas" :key="c.id" :value="c.id">
                                                 {{ c.codigo }} - {{ c.cuenta }}
                                             </option>
                                         </select>
+                                        <div v-if="page.props.errors[`detalles.${index}.catalogo_cuenta_id`]"
+                                            class="text-red-600 dark:text-red-400 text-sm">
+                                            {{ page.props.errors[`detalles.${index}.catalogo_cuenta_id`] }}
+                                        </div>
                                     </td>
                                     <td class="px-4 py-2">
                                         <Input v-model.number="detalle.parcial" type="number" step="0.01"
@@ -191,38 +211,22 @@ const breadcrumbs: BreadcrumbItem[] = [
                                     </td>
 
                                     <td class="px-4 py-2 text-right">
-                                        <Input
-                                            v-model.number="detalle.monto_debe"
-                                            type="number"
-                                            step="0.01"
-                                            placeholder="0.00"
-                                            class="w-24 text-right"
-                                            @input="
+                                        <Input v-model.number="detalle.monto_debe" type="number" step="0.01"
+                                            placeholder="0.00" class="w-24 text-right" @input="
                                                 detalle.monto_haber = 0;
-                                                detalle.tipo_movimiento = detalle.monto_debe > 0 ? 'DEBE' : '';
-                                            "
-                                        />
+                                            detalle.tipo_movimiento = detalle.monto_debe > 0 ? 'DEBE' : '';
+                                            " />
                                     </td>
 
                                     <td class="px-4 py-2 text-right">
-                                        <Input
-                                            v-model.number="detalle.monto_haber"
-                                            type="number"
-                                            step="0.01"
-                                            placeholder="0.00"
-                                            class="w-24 text-right"
-                                            @input="
+                                        <Input v-model.number="detalle.monto_haber" type="number" step="0.01"
+                                            placeholder="0.00" class="w-24 text-right" @input="
                                                 detalle.monto_debe = 0;
-                                                detalle.tipo_movimiento = detalle.monto_haber > 0 ? 'HABER' : '';
-                                            "
-                                        />
+                                            detalle.tipo_movimiento = detalle.monto_haber > 0 ? 'HABER' : '';
+                                            " />
                                     </td>
                                     <td class="p-2">
-                                        <Input
-                                            v-model="detalle.observaciones"
-                                            placeholder="Notas..."
-                                            class="w-full"
-                                        />
+                                        <Input v-model="detalle.observaciones" placeholder="Notas..." class="w-full" />
                                     </td>
 
                                     <td class="px-4 py-2 text-right">
