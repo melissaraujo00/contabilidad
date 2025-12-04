@@ -7,6 +7,7 @@ use App\Http\Requests\StorePartidaRequest;
 use App\Models\CatalogoCuenta;
 use App\Models\Partida;
 use App\Models\PeriodoFiscal;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -51,7 +52,18 @@ class PartidaController extends Controller
 
     public function store(StorePartidaRequest $request)
     {
-        Partida::query()->create($request->validated());
+        DB::transaction(function () use ($request) {
+            $data = $request->validated();
+            $detalles = $data['detalles'];
+            unset($data['detalles']);
+
+        $data['total_debe'] = collect($detalles)->sum('monto_debe');
+        $data['total_haber'] = collect($detalles)->sum('monto_haber');
+
+        $partida = Partida::create($data);
+
+        $partida->detalles()->createMany($detalles);
+        });
 
         return to_route('partidas.index');
     }

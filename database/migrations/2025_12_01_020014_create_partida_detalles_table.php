@@ -19,8 +19,9 @@ return new class extends Migration
             $table->foreignIdFor(CatalogoCuenta::class)->constrained();
             $table->text('description')->nullable();
             $table->string('tipo_movimiento');
-            $table->decimal('monto', 14, 4);
-            $table->decimal('parcial', 14, 4)->default(0);
+            $table->decimal('monto_debe', 15, 2)->default(0);
+            $table->decimal('monto_haber', 15, 2)->default(0);
+            $table->decimal('parcial', 15, 2)->nullable()->default(0);
             $table->integer('orden');
             $table->text('observaciones')->nullable();
             $table->timestamps();

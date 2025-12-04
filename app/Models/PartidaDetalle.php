@@ -12,7 +12,8 @@ class PartidaDetalle extends Model
         'catalogo_cuenta_id',
         'description',
         'tipo_movimiento',
-        'monto',
+        'monto_debe',
+        'monto_haber',
         'parcial',
         'orden',
         'observaciones'

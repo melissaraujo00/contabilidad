@@ -8,12 +8,12 @@ import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { store } from '@/actions/App/Http/Controllers/PartidaController';
 import { computed } from 'vue';
-import { Trash2, Plus } from 'lucide-vue-next';
+import { Trash2, Plus, AlertTriangle } from 'lucide-vue-next';
 
 const { periodos, tiposPartida, cuentas } = usePage().props;
 
 interface DetallePartida {
-    id_cuenta: string;
+    catalogo_cuenta_id: string;
     tipo_movimiento: 'DEBE' | 'HABER' | '';
     monto_debe: number | null;
     monto_haber: number | null;
@@ -34,7 +34,7 @@ const form = useForm({
 
 // Inicialización
 form.detalles.push({
-    id_cuenta: '',
+    catalogo_cuenta_id: '',
     tipo_movimiento: '',
     monto_debe: null,
     monto_haber: null,
@@ -59,7 +59,7 @@ const estaBalanceada = computed(() =>
 
 const agregarDetalle = () => {
     form.detalles.push({
-        id_cuenta: '',
+        catalogo_cuenta_id: '',
         tipo_movimiento: '',
         monto_debe: null,
         monto_haber: null,
@@ -77,11 +77,7 @@ const eliminarDetalle = (i: number) => {
 };
 
 const handleSubmit = () => {
-    if (!estaBalanceada.value) {
-        alert('La partida debe estar balanceada (DEBE = HABER)');
-        return;
-    }
-
+    // Validación eliminada - ahora puede guardar sin estar balanceada
     form.submit(store());
 };
 
@@ -102,6 +98,14 @@ const breadcrumbs: BreadcrumbItem[] = [
             <header class="flex items-center justify-between">
                 <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Nueva Partida</h1>
             </header>
+
+            <!-- Alerta cuando no está balanceada -->
+            <div v-if="!estaBalanceada && totalDebe > 0" class="flex items-center gap-2 p-4 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg">
+                <AlertTriangle class="w-5 h-5 text-yellow-600 dark:text-yellow-500" />
+                <p class="text-sm text-yellow-800 dark:text-yellow-200">
+                    La partida no está balanceada. Diferencia: <strong>{{ diferencia.toFixed(2) }}</strong>
+                </p>
+            </div>
 
             <form @submit.prevent="handleSubmit">
                 <div class="flex flex-col md:flex-row gap-4">
@@ -174,7 +178,7 @@ const breadcrumbs: BreadcrumbItem[] = [
                                 <tr v-for="(detalle, index) in form.detalles" :key="index" class="border-t">
                                     <td class="px-4 py-2">{{ detalle.orden }}</td>
                                     <td class="px-4 py-2">
-                                        <select v-model="detalle.id_cuenta" class="w-full px-2 py-1 border rounded-md min-w-[300px]">
+                                        <select v-model="detalle.catalogo_cuenta_id" class="w-full px-2 py-1 border rounded-md min-w-[300px]">
                                             <option value="">Seleccione cuenta</option>
                                             <option v-for="c in cuentas" :key="c.id" :value="c.id">
                                                 {{ c.codigo }} - {{ c.cuenta }}
@@ -239,7 +243,7 @@ const breadcrumbs: BreadcrumbItem[] = [
                                 <tr>
                                     <td colspan="3" class="px-4 py-3 text-right">Diferencia:</td>
                                     <td colspan="2" class="px-4 py-3 text-right"
-                                        :class="diferencia === 0 ? 'text-green-600' : 'text-red-600'">
+                                        :class="Math.abs(diferencia) < 0.01 ? 'text-green-600' : 'text-red-600'">
                                         {{ diferencia.toFixed(2) }}
                                     </td>
                                     <td></td>

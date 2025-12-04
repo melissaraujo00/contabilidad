@@ -6,43 +6,30 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class StorePartidaRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
     public function authorize(): bool
     {
         return true;
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
-     */
     public function rules(): array
     {
         return [
-            'partida_numero' => [
-                'required',
-                'integer'
-            ],
-            'fecha_partida' => [
-                'required',
-                'date'
-            ],
-            'tipo_partida' => [
-                'required'
-            ],
-            'periodo_fiscal_id' => [
-                'required',
-            ],
-            'description' => [
-                'nullable',
-                'string'
-            ],
-            'estado' => [
-                'boolean'
-            ]
+            'partida_numero' => ['nullable', 'integer'],
+            'fecha_partida' => ['required', 'date'],
+            'periodo_fiscal_id' => ['required', 'exists:periodo_fiscals,id'],
+            'tipo_partida' => ['required', 'string'],
+            'description' => ['nullable', 'string'],
+            'estado' => ['nullable', 'boolean'],
+
+            // Validaciones para detalles
+            'detalles' => ['required', 'array', 'min:1'],
+            'detalles.*.catalogo_cuenta_id' => ['required'],
+            'detalles.*.tipo_movimiento' => ['required', 'in:DEBE,HABER'],
+            'detalles.*.monto_debe' => ['nullable', 'numeric', 'min:0'],
+            'detalles.*.monto_haber' => ['nullable', 'numeric', 'min:0'],
+            'detalles.*.parcial' => ['nullable', 'numeric'],
+            'detalles.*.orden' => ['required', 'integer', 'min:1'],
+            'detalles.*.observaciones' => ['nullable', 'string'],
         ];
     }
 }
