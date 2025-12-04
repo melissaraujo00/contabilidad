@@ -20,8 +20,8 @@ return new class extends Migration
             $table->string('tipo_partida');
             $table->text('description')->nullable();
             $table->boolean('estado')->default(1);
-            $table->decimal('total_debe', 14, 4)->default(0);
-            $table->decimal('total_haber', 14, 4)->default(0);
+            $table->decimal('total_debe', 15, 2)->default(0);
+            $table->decimal('total_haber', 15, 2)->default(0);
             $table->timestamps();
         });
     }

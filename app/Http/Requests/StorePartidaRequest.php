@@ -24,10 +24,10 @@ class StorePartidaRequest extends FormRequest
             // Validaciones para detalles
             'detalles' => ['required', 'array', 'min:1'],
             'detalles.*.catalogo_cuenta_id' => ['required'],
-            'detalles.*.tipo_movimiento' => ['required', 'in:DEBE,HABER'],
+            'detalles.*.tipo_movimiento' => ['nullable', 'in:DEBE,HABER'],
             'detalles.*.monto_debe' => ['nullable', 'numeric', 'min:0'],
             'detalles.*.monto_haber' => ['nullable', 'numeric', 'min:0'],
-            'detalles.*.parcial' => ['nullable', 'numeric'],
+            'detalles.*.parcial' => ['nullable', 'numeric', 'min:0'],
             'detalles.*.orden' => ['required', 'integer', 'min:1'],
             'detalles.*.observaciones' => ['nullable', 'string'],
         ];
