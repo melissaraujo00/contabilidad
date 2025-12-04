@@ -21,6 +21,11 @@ const form = ref({
 const filtrar = () => {
     router.get('/libro-mayor', form.value, { preserveState: true, replace: true });
 };
+const descargarPDF = () => {
+    // Usar window.location.href para forzar una descarga de archivo
+    const params = new URLSearchParams(form.value).toString();
+    window.location.href = `/libro-mayor/reporte?${params}`;
+};
 
 const formatNumber = (value: number | string) => {
     return new Intl.NumberFormat('en-US', {
@@ -30,6 +35,7 @@ const formatNumber = (value: number | string) => {
 };
 </script>
 <template>
+
     <Head title="Libro Mayor" />
 
     <AppLayout>
@@ -54,9 +60,14 @@ const formatNumber = (value: number | string) => {
                         </option>
                     </select>
                 </div>
-                <div class="flex items-end">
-                    <Button @click="filtrar">Generar Reporte</Button>
+                <div class="flex items-end gap-2">
+                    <Button @click="filtrar">Filtrar</Button>
+
+                    <Button variant="outline" @click="descargarPDF">
+                        Descargar PDF
+                    </Button>
                 </div>
+
             </div>
 
             <div class="space-y-8">
