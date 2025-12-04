@@ -14,7 +14,7 @@ class StorePartidaRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'partida_numero' => ['nullable', 'integer'],
+            'partida_numero' => ['required', 'integer'],
             'fecha_partida' => ['required', 'date'],
             'periodo_fiscal_id' => ['required', 'exists:periodo_fiscals,id'],
             'tipo_partida' => ['required', 'string'],
@@ -30,6 +30,17 @@ class StorePartidaRequest extends FormRequest
             'detalles.*.parcial' => ['nullable', 'numeric', 'min:0'],
             'detalles.*.orden' => ['required', 'integer', 'min:1'],
             'detalles.*.observaciones' => ['nullable', 'string'],
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'partida_numero.required' => 'El numero de partida es obligatorio',
+            'fecha_partida.required' => 'La fecha es obligatoria',
+            'tipo_partida.required' => 'El tipo de partida es obligatoria',
+            'periodo_fiscal_id.required' => 'El periodo fiscal es obligatorio',
+            'detalles.*.catalogo_cuenta_id' => 'El catalogo de cuenta es obligatorio'
         ];
     }
 }
