@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\CatalogoCuenta;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
- use Barryvdh\DomPDF\Facade\Pdf;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class LibroMayorController extends Controller
 {
@@ -82,8 +82,8 @@ class LibroMayorController extends Controller
 
     public function reporte(Request $request)
     {
-        $fechaInicio = $request->input('fecha_inicio');
-        $fechaFin = $request->input('fecha_fin');
+        $fechaInicio = $request->input('fecha_inicio', date('Y-m-01'));
+        $fechaFin = $request->input('fecha_fin', date('Y-m-t'));
         $cuentaId = $request->input('cuenta_id');
 
         $query = CatalogoCuenta::query()
@@ -138,7 +138,6 @@ class LibroMayorController extends Controller
             ];
         });
 
-        // GENERAR PDF
         $pdf = Pdf::loadView('libromayor.reporte', [
             'cuentas' => $cuentasProcesadas,
             'fechaInicio' => $fechaInicio,

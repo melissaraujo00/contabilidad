@@ -22,10 +22,24 @@ const filtrar = () => {
     router.get('/libro-mayor', form.value, { preserveState: true, replace: true });
 };
 const descargarPDF = () => {
-    // Usar window.location.href para forzar una descarga de archivo
-    const params = new URLSearchParams(form.value).toString();
-    window.location.href = `/libro-mayor/reporte?${params}`;
+    const params = new URLSearchParams();
+
+    if (form.value.fecha_inicio) {
+        params.append("fecha_inicio", form.value.fecha_inicio);
+    }
+
+    if (form.value.fecha_fin) {
+        params.append("fecha_fin", form.value.fecha_fin);
+    }
+
+    if (form.value.cuenta_id) {
+        params.append("cuenta_id", form.value.cuenta_id);
+    }
+
+    const query = params.toString();
+    window.location.href = `/libro-mayor/reporte${query ? "?" + query : ""}`;
 };
+
 
 const formatNumber = (value: number | string) => {
     return new Intl.NumberFormat('en-US', {
