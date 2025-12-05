@@ -27,6 +27,9 @@ Route::get('dashboard', function () {
 Route::get('/libro-mayor/reporte', [LibroMayorController::class, 'reporte'])
     ->name('libromayor.reporte');
 
+Route::get('/partidas/reporte', [PartidaController::class, 'reporte'])
+    ->name('partidas.reporte');
+
 Route::resource('catalogo-cuentas', CatalogoCuentaController::class)->only('index');
 
 Route::resource('empresa', EmpresaControlador::class);
