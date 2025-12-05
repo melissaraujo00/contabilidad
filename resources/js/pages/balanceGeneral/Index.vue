@@ -29,9 +29,19 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 const fecha = ref(props.fechaCorte);
 
-const filtrar = () => {
-    router.get('/balance-general', { fecha_corte: fecha.value }, { preserveState: true, replace: true });
+const descargarPDF = () => {
+    const params = new URLSearchParams();
+    params.append("fecha_corte", fecha.value);
+
+    const query = params.toString();
+    window.location.href = `/balance-general/reporte?${query}`;
 };
+
+
+const filtrar = () => {
+    router.get('/balance-general', { fecha_corte: fecha.value }, { replace: true });
+};
+
 
 const formatCurrency = (value: number) => {
     return new Intl.NumberFormat('en-US', {
@@ -43,22 +53,29 @@ const formatCurrency = (value: number) => {
 </script>
 
 <template>
+
     <Head title="Balance General" />
 
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="p-6 space-y-6">
             <!-- Encabezado y Filtro -->
-            <div class="flex flex-col md:flex-row justify-between items-end gap-4 bg-white dark:bg-black p-4 rounded-lg shadow border border-gray-200 dark:border-gray-800">
+            <div
+                class="flex flex-col md:flex-row justify-between items-end gap-4 bg-gray-50 dark:bg-black p-4 rounded-lg shadow border  dark:border-gray-800">
                 <div>
                     <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Balance General</h1>
                     <p class="text-sm text-gray-500">Estado de Situación Financiera al {{ fecha }}</p>
                 </div>
                 <div class="flex items-end gap-2">
                     <div>
-                        <Label class="p-1">Fecha de Corte</Label>
-                        <Input type="date" v-model="fecha" />
+
+                        <Label>Fecha de Corte</Label>
+                        <Input type="date" v-model="fecha" class="mt-1 block w-[150px] rounded-md border border-gray-300 bg-white px-3 py-2 text-sm q focus:ring-blue-500 focus:border-blue-500"/>
                     </div>
-                    <Button @click="filtrar">Actualizar</Button>
+                    <Button @click="filtrar">Filtrar</Button>
+                    <Button variant="outline" @click="descargarPDF" class="border border-gray-300 bg-white hover:bg-gray-50 text-gray-700 px-4 py-2 rounded text-sm font-medium transition-colors">
+                        Descargar PDF
+                    </Button>
+
                 </div>
             </div>
 
@@ -66,7 +83,8 @@ const formatCurrency = (value: number) => {
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
                 <!-- COLUMNA IZQUIERDA: ACTIVOS -->
-                <div class="bg-white dark:bg-black rounded-lg shadow border border-gray-200 dark:border-gray-800 flex flex-col h-full">
+                <div
+                    class="bg-white dark:bg-black rounded-lg shadow border border-gray-200 dark:border-gray-800 flex flex-col h-full">
                     <div class="p-4 border-b border-gray-200 dark:border-gray-800 bg-blue-50 dark:bg-blue-900/20">
                         <h2 class="font-bold text-lg text-blue-800 dark:text-blue-300 text-center">ACTIVO</h2>
                     </div>
@@ -74,10 +92,13 @@ const formatCurrency = (value: number) => {
                     <div class="p-4 flex-1 overflow-auto">
                         <table class="w-full text-sm">
                             <tbody>
-                                <tr v-for="cta in activos" :key="cta.id" class="border-b border-dashed border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-900">
+                                <tr v-for="cta in activos" :key="cta.id"
+                                    class="border-b border-dashed border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-900">
                                     <td class="py-2 text-gray-600 dark:text-gray-400">{{ cta.codigo }}</td>
-                                    <td class="py-2 pl-2 font-medium text-gray-800 dark:text-gray-200">{{ cta.cuenta }}</td>
-                                    <td class="py-2 text-right text-gray-700 dark:text-gray-300">{{ formatCurrency(cta.saldo_actual) }}</td>
+                                    <td class="py-2 pl-2 font-medium text-gray-800 dark:text-gray-200">{{ cta.cuenta }}
+                                    </td>
+                                    <td class="py-2 text-right text-gray-700 dark:text-gray-300">{{
+                                        formatCurrency(cta.saldo_actual) }}</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -86,15 +107,18 @@ const formatCurrency = (value: number) => {
                     <div class="p-4 bg-gray-50 dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 mt-auto">
                         <div class="flex justify-between items-center font-bold text-lg">
                             <span>TOTAL ACTIVO</span>
-                            <span class="text-blue-600 dark:text-blue-400">{{ formatCurrency(totales.totalActivo) }}</span>
+                            <span class="text-blue-600 dark:text-blue-400">{{ formatCurrency(totales.totalActivo)
+                                }}</span>
                         </div>
                     </div>
                 </div>
 
                 <!-- COLUMNA DERECHA: PASIVO + PATRIMONIO -->
-                <div class="bg-white dark:bg-black rounded-lg shadow border border-gray-200 dark:border-gray-800 flex flex-col h-full">
+                <div
+                    class="bg-white dark:bg-black rounded-lg shadow border border-gray-200 dark:border-gray-800 flex flex-col h-full">
                     <div class="p-4 border-b border-gray-200 dark:border-gray-800 bg-red-50 dark:bg-red-900/20">
-                        <h2 class="font-bold text-lg text-red-800 dark:text-red-300 text-center">PASIVO Y PATRIMONIO</h2>
+                        <h2 class="font-bold text-lg text-red-800 dark:text-red-300 text-center">PASIVO Y PATRIMONIO
+                        </h2>
                     </div>
 
                     <div class="p-4 flex-1 overflow-auto space-y-6">
@@ -104,19 +128,25 @@ const formatCurrency = (value: number) => {
                             <h3 class="font-bold text-gray-500 mb-2 border-b">PASIVO</h3>
                             <table class="w-full text-sm">
                                 <tbody>
-                                    <tr v-for="cta in pasivos" :key="cta.id" class="border-b border-dashed border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-900">
+                                    <tr v-for="cta in pasivos" :key="cta.id"
+                                        class="border-b border-dashed border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-900">
                                         <td class="py-2 text-gray-600 dark:text-gray-400">{{ cta.codigo }}</td>
-                                        <td class="py-2 pl-2 font-medium text-gray-800 dark:text-gray-200">{{ cta.cuenta }}</td>
-                                        <td class="py-2 text-right text-gray-700 dark:text-gray-300">{{ formatCurrency(cta.saldo_actual) }}</td>
+                                        <td class="py-2 pl-2 font-medium text-gray-800 dark:text-gray-200">{{ cta.cuenta
+                                            }}</td>
+                                        <td class="py-2 text-right text-gray-700 dark:text-gray-300">{{
+                                            formatCurrency(cta.saldo_actual) }}</td>
                                     </tr>
                                     <tr v-if="pasivos.length === 0">
-                                        <td colspan="3" class="py-2 text-center text-gray-400 italic">Sin pasivos registrados</td>
+                                        <td colspan="3" class="py-2 text-center text-gray-400 italic">Sin pasivos
+                                            registrados</td>
                                     </tr>
                                 </tbody>
                                 <tfoot>
                                     <tr>
-                                        <td colspan="2" class="py-2 text-right font-semibold text-xs text-gray-500">Total Pasivo:</td>
-                                        <td class="py-2 text-right font-semibold text-gray-700 dark:text-gray-300">{{ formatCurrency(totales.totalPasivo) }}</td>
+                                        <td colspan="2" class="py-2 text-right font-semibold text-xs text-gray-500">
+                                            Total Pasivo:</td>
+                                        <td class="py-2 text-right font-semibold text-gray-700 dark:text-gray-300">{{
+                                            formatCurrency(totales.totalPasivo) }}</td>
                                     </tr>
                                 </tfoot>
                             </table>
@@ -127,10 +157,13 @@ const formatCurrency = (value: number) => {
                             <h3 class="font-bold text-gray-500 mb-2 border-b">PATRIMONIO</h3>
                             <table class="w-full text-sm">
                                 <tbody>
-                                    <tr v-for="cta in patrimonio" :key="cta.id" class="border-b border-dashed border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-900">
+                                    <tr v-for="cta in patrimonio" :key="cta.id"
+                                        class="border-b border-dashed border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-900">
                                         <td class="py-2 text-gray-600 dark:text-gray-400">{{ cta.codigo }}</td>
-                                        <td class="py-2 pl-2 font-medium text-gray-800 dark:text-gray-200">{{ cta.cuenta }}</td>
-                                        <td class="py-2 text-right text-gray-700 dark:text-gray-300">{{ formatCurrency(cta.saldo_actual) }}</td>
+                                        <td class="py-2 pl-2 font-medium text-gray-800 dark:text-gray-200">{{ cta.cuenta
+                                            }}</td>
+                                        <td class="py-2 text-right text-gray-700 dark:text-gray-300">{{
+                                            formatCurrency(cta.saldo_actual) }}</td>
                                     </tr>
 
                                     <!-- RESULTADO DEL EJERCICIO (Calculado Dinámicamente) -->
@@ -139,15 +172,18 @@ const formatCurrency = (value: number) => {
                                         <td class="py-2 pl-2 font-bold text-gray-800 dark:text-gray-200">
                                             {{ resultadoEjercicio >= 0 ? 'Utilidad del Ejercicio' : 'Pérdida del Ejercicio' }}
                                         </td>
-                                        <td class="py-2 text-right font-bold" :class="resultadoEjercicio >= 0 ? 'text-green-600' : 'text-red-600'">
+                                        <td class="py-2 text-right font-bold"
+                                            :class="resultadoEjercicio >= 0 ? 'text-green-600' : 'text-red-600'">
                                             {{ formatCurrency(resultadoEjercicio) }}
                                         </td>
                                     </tr>
                                 </tbody>
                                 <tfoot>
                                     <tr>
-                                        <td colspan="2" class="py-2 text-right font-semibold text-xs text-gray-500">Total Patrimonio:</td>
-                                        <td class="py-2 text-right font-semibold text-gray-700 dark:text-gray-300">{{ formatCurrency(totales.totalPatrimonio) }}</td>
+                                        <td colspan="2" class="py-2 text-right font-semibold text-xs text-gray-500">
+                                            Total Patrimonio:</td>
+                                        <td class="py-2 text-right font-semibold text-gray-700 dark:text-gray-300">{{
+                                            formatCurrency(totales.totalPatrimonio) }}</td>
                                     </tr>
                                 </tfoot>
                             </table>
@@ -175,7 +211,8 @@ const formatCurrency = (value: number) => {
                     ✓ EL BALANCE ESTÁ CUADRADO
                 </span>
                 <span v-else>
-                    ⚠ EL BALANCE ESTÁ DESCUADRADO (Diferencia: {{ formatCurrency(Math.abs(totales.totalActivo - (totales.totalPasivo + totales.totalPatrimonio))) }})
+                    ⚠ EL BALANCE ESTÁ DESCUADRADO (Diferencia: {{ formatCurrency(Math.abs(totales.totalActivo -
+                        (totales.totalPasivo + totales.totalPatrimonio))) }})
                 </span>
             </div>
 

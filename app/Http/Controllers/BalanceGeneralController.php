@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\CatalogoCuenta;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class BalanceGeneralController extends Controller
 {
@@ -16,7 +17,7 @@ class BalanceGeneralController extends Controller
         $cuentas = CatalogoCuenta::with(['partidaDetalles' => function ($q) use ($fechaCorte) {
             $q->whereHas('partida', function ($p) use ($fechaCorte) {
                 $p->where('fecha_partida', '<=', $fechaCorte)
-                  ->where('estado', true);
+                    ->where('estado', true);
             });
         }])->get();
 
@@ -78,5 +79,74 @@ class BalanceGeneralController extends Controller
             'resultadoEjercicio' => $resultadoEjercicio,
             'totales' => compact('totalActivo', 'totalPasivo', 'totalPatrimonio')
         ]);
+    }
+
+
+
+    public function reporte(Request $request)
+    {
+        $fechaCorte = $request->input('fecha_corte', date('Y-m-d'));
+
+        // Traemos y procesamos igual que index
+        $cuentas = CatalogoCuenta::with(['partidaDetalles' => function ($q) use ($fechaCorte) {
+            $q->whereHas('partida', function ($p) use ($fechaCorte) {
+                $p->where('fecha_partida', '<=', $fechaCorte)
+                    ->where('estado', true);
+            });
+        }])->get();
+
+        $cuentasProcesadas = $cuentas->map(function ($cuenta) {
+            $saldo = 0;
+
+            foreach ($cuenta->partidaDetalles as $d) {
+                $debe = $d->monto_debe;
+                $haber = $d->monto_haber;
+
+                if ((float)$debe == 0 && (float)$haber == 0 && (float)$d->parcial > 0) {
+                    if ($d->tipo_movimiento === 'DEBE') $debe = $d->parcial;
+                    if ($d->tipo_movimiento === 'HABER') $haber = $d->parcial;
+                }
+
+                $prefix = substr($cuenta->codigo, 0, 1);
+
+                if (in_array($prefix, ['1', '5', '6'])) {
+                    $saldo += ($debe - $haber);
+                } else {
+                    $saldo += ($haber - $debe);
+                }
+            }
+
+            $cuenta->saldo_actual = $saldo;
+            return $cuenta;
+        })->filter(fn($c) => abs($c->saldo_actual) > 0);
+
+        // Clasificación
+        $activos = $cuentasProcesadas->filter(fn($c) => str_starts_with($c->codigo, '1'))->values();
+        $pasivos = $cuentasProcesadas->filter(fn($c) => str_starts_with($c->codigo, '2'))->values();
+        $patrimonio = $cuentasProcesadas->filter(fn($c) => str_starts_with($c->codigo, '3'))->values();
+
+        // Resultado del Ejercicio
+        $ingresos = $cuentasProcesadas->filter(fn($c) => str_starts_with($c->codigo, '4'))->sum('saldo_actual');
+        $gastos = $cuentasProcesadas->filter(
+            fn($c) =>
+            str_starts_with($c->codigo, '5') || str_starts_with($c->codigo, '6')
+        )->sum('saldo_actual');
+        $resultadoEjercicio = $ingresos - $gastos;
+
+        // Totales
+        $totalActivo = $activos->sum('saldo_actual');
+        $totalPasivo = $pasivos->sum('saldo_actual');
+        $totalPatrimonio = $patrimonio->sum('saldo_actual') + $resultadoEjercicio;
+
+        $pdf = Pdf::loadView('balanceGeneral.reporte', [
+            'fechaCorte' => $fechaCorte,
+            'activos' => $activos,
+            'pasivos' => $pasivos,
+            'patrimonio' => $patrimonio,
+            'resultadoEjercicio' => $resultadoEjercicio,
+            'totales' => compact('totalActivo', 'totalPasivo', 'totalPatrimonio')
+        ])->setPaper('letter', 'portrait');
+
+        return $pdf->download("balance-general-$fechaCorte.pdf");
     }
 }

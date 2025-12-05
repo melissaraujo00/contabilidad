@@ -144,6 +144,6 @@ class LibroMayorController extends Controller
             'fechaFin' => $fechaFin
         ]);
 
-        return $pdf->stream('libro_mayor.pdf');
+        return $pdf->download('libro_mayor.pdf');
     }
 }

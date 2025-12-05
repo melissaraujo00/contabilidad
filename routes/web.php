@@ -30,6 +30,10 @@ Route::get('/libro-mayor/reporte', [LibroMayorController::class, 'reporte'])
 Route::get('/partidas/reporte', [PartidaController::class, 'reporte'])
     ->name('partidas.reporte');
 
+Route::get('/balance-general/reporte', [BalanceGeneralController::class, 'reporte'])
+    ->name('balanceGeneral.reporte');
+
+
 Route::resource('catalogo-cuentas', CatalogoCuentaController::class)->only('index');
 
 Route::resource('empresa', EmpresaControlador::class);
@@ -38,7 +42,7 @@ Route::resource('periodo-fiscal', PeriodoFiscalController::class);
 
 Route::resource('partidas', PartidaController::class);
 Route::resource('libro-mayor', LibroMayorController::class);
-Route::resource('balance-general',BalanceGeneralController::class);
+Route::resource('balance-general', BalanceGeneralController::class);
 Route::resource('balance-comprobacion', BalanceComprobacionController::class);
 Route::resource('estado-resultado', EstadoResultadoController::class);
 
