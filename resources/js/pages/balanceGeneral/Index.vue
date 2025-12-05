@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import AppLayout from '@/layouts/AppLayout.vue';
 import { Head, router } from '@inertiajs/vue3';
+import { type BreadcrumbItem } from '@/types';
 import { ref } from 'vue';
 import Label from '@/components/ui/label/Label.vue';
 import Input from '@/components/ui/input/Input.vue';
@@ -18,6 +19,13 @@ const props = defineProps<{
         totalPatrimonio: number;
     }
 }>();
+
+const breadcrumbs: BreadcrumbItem[] = [
+    {
+        title: 'Balance General',
+        href: '/balance-general',
+    },
+];
 
 const fecha = ref(props.fechaCorte);
 
@@ -37,7 +45,7 @@ const formatCurrency = (value: number) => {
 <template>
     <Head title="Balance General" />
 
-    <AppLayout>
+    <AppLayout :breadcrumbs="breadcrumbs">
         <div class="p-6 space-y-6">
             <!-- Encabezado y Filtro -->
             <div class="flex flex-col md:flex-row justify-between items-end gap-4 bg-white dark:bg-black p-4 rounded-lg shadow border border-gray-200 dark:border-gray-800">
@@ -47,7 +55,7 @@ const formatCurrency = (value: number) => {
                 </div>
                 <div class="flex items-end gap-2">
                     <div>
-                        <Label>Fecha de Corte</Label>
+                        <Label class="p-1">Fecha de Corte</Label>
                         <Input type="date" v-model="fecha" />
                     </div>
                     <Button @click="filtrar">Actualizar</Button>

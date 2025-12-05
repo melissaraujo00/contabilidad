@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import AppLayout from '@/layouts/AppLayout.vue';
+import { type BreadcrumbItem } from '@/types';
 import { Head, router } from '@inertiajs/vue3';
 import { ref } from 'vue';
 import Label from '@/components/ui/label/Label.vue';
@@ -11,6 +12,13 @@ const props = defineProps({
     todasCuentas: Array,
     filtros: Object
 });
+
+const breadcrumbs: BreadcrumbItem[] = [
+    {
+        title: 'Libro Mayor',
+        href: '/libro-mayor',
+    },
+];
 
 const form = ref({
     fecha_inicio: props.filtros.fecha_inicio,
@@ -52,22 +60,22 @@ const formatNumber = (value: number | string) => {
 <template>
     <Head title="Libro Mayor" />
 
-    <AppLayout>
+    <AppLayout :breadcrumbs="breadcrumbs">
         <div class="p-6 bg-white dark:bg-black rounded-lg shadow min-h-screen">
             <h1 class="text-2xl font-bold mb-6 text-gray-900 dark:text-white">Libro Mayor</h1>
 
             <!-- Filtros -->
             <div class="flex flex-wrap gap-4 mb-8 bg-gray-50 dark:bg-gray-900 p-4 rounded-lg border border-gray-100 dark:border-gray-800">
                 <div class="w-full md:w-auto">
-                    <Label class="text-gray-700 dark:text-gray-300">Fecha Inicio</Label>
+                    <Label class="p-1 text-gray-700 dark:text-gray-300">Fecha Inicio</Label>
                     <Input type="date" v-model="form.fecha_inicio" class="bg-white dark:bg-gray-800 dark:text-white dark:border-gray-700" />
                 </div>
                 <div class="w-full md:w-auto">
-                    <Label class="text-gray-700 dark:text-gray-300">Fecha Fin</Label>
+                    <Label class="p-1 text-gray-700 dark:text-gray-300">Fecha Fin</Label>
                     <Input type="date" v-model="form.fecha_fin" class="bg-white dark:bg-gray-800 dark:text-white dark:border-gray-700" />
                 </div>
                 <div class="w-full md:w-64">
-                    <Label class="text-gray-700 dark:text-gray-300">Cuenta (Opcional)</Label>
+                    <Label class="p-1 text-gray-700 dark:text-gray-300">Cuenta (Opcional)</Label>
                     <select v-model="form.cuenta_id" class="w-full border rounded-md p-2 bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                         <option value="">Todas las cuentas</option>
                         <option v-for="c in todasCuentas" :key="c.id" :value="c.id">
@@ -78,7 +86,7 @@ const formatNumber = (value: number | string) => {
                 <div class="flex items-end gap-2">
                     <Button @click="filtrar">Filtrar</Button>
 
-                    <Button variant="outline" @click="descargarPDF" class="dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-800">
+                    <Button variant="outline" @click="descargarPDF" class="dark:border-gray-600 dark:text-gray-300 hover:bg-red-600 hover:text-white">
                         Descargar PDF
                     </Button>
                 </div>

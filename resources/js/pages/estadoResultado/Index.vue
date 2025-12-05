@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import AppLayout from '@/layouts/AppLayout.vue';
 import { Head, router } from '@inertiajs/vue3';
+import { type BreadcrumbItem } from '@/types';
 import { ref } from 'vue';
 import Label from '@/components/ui/label/Label.vue';
 import Input from '@/components/ui/input/Input.vue';
@@ -23,6 +24,13 @@ const props = defineProps<{
     }
 }>();
 
+const breadcrumbs: BreadcrumbItem[] = [
+    {
+        title: 'Estado de Resultados',
+        href: '/estado-resultados',
+    },
+];
+
 const form = ref({
     fecha_inicio: props.filtros.fechaInicio,
     fecha_fin: props.filtros.fechaFin,
@@ -44,7 +52,7 @@ const formatCurrency = (value: number) => {
 <template>
     <Head title="Estado de Resultados" />
 
-    <AppLayout>
+    <AppLayout :breadcrumbs="breadcrumbs">
         <div class="p-6 space-y-6 max-w-5xl mx-auto">
             <!-- Encabezado y Filtros -->
             <div class="flex flex-col md:flex-row justify-between items-end gap-4 bg-white dark:bg-black p-4 rounded-lg shadow border border-gray-200 dark:border-gray-800">
@@ -54,11 +62,11 @@ const formatCurrency = (value: number) => {
                 </div>
                 <div class="flex flex-wrap items-end gap-2">
                     <div>
-                        <Label>Fecha Inicio</Label>
+                        <Label class="p-1">Fecha Inicio</Label>
                         <Input type="date" v-model="form.fecha_inicio" />
                     </div>
                     <div>
-                        <Label>Fecha Fin</Label>
+                        <Label class="p-1">Fecha Fin</Label>
                         <Input type="date" v-model="form.fecha_fin" />
                     </div>
                     <Button @click="filtrar">Generar</Button>

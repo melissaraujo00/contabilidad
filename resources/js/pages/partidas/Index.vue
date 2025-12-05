@@ -85,12 +85,12 @@ const descargarPDF = () => {
 
           <div class="flex gap-2">
             <Button @click="filtrar"
-              class="bg-black hover:bg-gray-800 text-white px-4 py-2 rounded text-sm font-medium transition-colors">
+              class="bg-black hover:bg-gray-700 text-white px-4 py-2 rounded text-sm font-medium transition-colors">
               Filtrar
             </Button>
 
             <Button variant="outline" @click="descargarPDF"
-              class="border border-gray-300 bg-white hover:bg-gray-50 text-gray-700 px-4 py-2 rounded text-sm font-medium transition-colors">
+              class="border border-gray-300 bg-white hover:bg-red-600 text-gray-700 hover:text-white px-4 py-2 rounded text-sm font-medium transition-colors">
               Descargar PDF
             </Button>
           </div>
