@@ -14,7 +14,19 @@ import {
 import { dashboard } from '@/routes';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/vue3';
-import { BookOpen, Folder, LayoutGrid, BookOpenText, Building, CalendarDays } from 'lucide-vue-next';
+import {
+    LayoutDashboard,
+    FolderTree,
+    Building2,
+    CalendarRange,
+    FileText,
+    BookOpen,
+    Scale,
+    Calculator,
+    TrendingUp,
+    Github,
+    FileCode
+} from 'lucide-vue-next';
 import AppLogo from './AppLogo.vue';
 
 
@@ -22,27 +34,27 @@ const mainNavItems: NavItem[] = [
     {
         title: 'Dashboard',
         href: dashboard(),
-        icon: LayoutGrid,
+        icon: LayoutDashboard,
     },
     {
         title: 'Catalogo Cuentas',
         href: '/catalogo-cuentas',
-        icon: BookOpen,
+        icon: FolderTree,
     },
     {
         title: 'Empresa',
         href: '/empresa',
-        icon: Building,
+        icon: Building2,
     },
     {
         title: 'Periodo Fiscal',
         href: '/periodo-fiscal',
-        icon: CalendarDays,
+        icon: CalendarRange,
     },
     {
         title: 'Partidas',
         href: '/partidas',
-        icon: BookOpenText,
+        icon: FileText,
     },
     {
         title: 'Libro Mayor',
@@ -52,7 +64,17 @@ const mainNavItems: NavItem[] = [
     {
         title: 'Balance General',
         href: '/balance-general',
-        icon: BookOpen,
+        icon: Scale,
+    },
+    {
+        title: 'Balance Comprobacion',
+        href: '/balance-comprobacion',
+        icon: Calculator,
+    },
+    {
+        title: 'Estado de Resultado',
+        href: '/estado-resultado',
+        icon: TrendingUp,
     },
 ];
 
@@ -60,12 +82,12 @@ const footerNavItems: NavItem[] = [
     {
         title: 'Github Repo',
         href: 'https://github.com/laravel/vue-starter-kit',
-        icon: Folder,
+        icon: Github,
     },
     {
         title: 'Documentation',
         href: 'https://laravel.com/docs/starter-kits#vue',
-        icon: BookOpen,
+        icon: FileCode,
     },
 ];
 </script>
@@ -77,7 +99,7 @@ const footerNavItems: NavItem[] = [
                 <SidebarMenuItem>
                     <SidebarMenuButton size="lg" as-child>
                         <Link :href="dashboard()">
-                        <AppLogo />
+                            <AppLogo />
                         </Link>
                     </SidebarMenuButton>
                 </SidebarMenuItem>

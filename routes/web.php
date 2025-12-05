@@ -1,8 +1,10 @@
 <?php
 
+use App\Http\Controllers\BalanceComprobacionController;
 use App\Http\Controllers\BalanceGeneralController;
 use App\Http\Controllers\CatalogoCuentaController;
 use App\Http\Controllers\EmpresaControlador;
+use App\Http\Controllers\EstadoResultadoController;
 use App\Http\Controllers\LibroMayorController;
 use App\Http\Controllers\PartidaController;
 use App\Http\Controllers\PeriodoFiscalController;
@@ -34,6 +36,7 @@ Route::resource('periodo-fiscal', PeriodoFiscalController::class);
 Route::resource('partidas', PartidaController::class);
 Route::resource('libro-mayor', LibroMayorController::class);
 Route::resource('balance-general',BalanceGeneralController::class);
-
+Route::resource('balance-comprobacion', BalanceComprobacionController::class);
+Route::resource('estado-resultado', EstadoResultadoController::class);
 
 require __DIR__ . '/settings.php';

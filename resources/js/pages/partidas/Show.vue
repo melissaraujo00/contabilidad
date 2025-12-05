@@ -170,12 +170,10 @@ const formatCurrency = (amount) => {
                   {{ detalle.orden }}
                 </TableCell>
                 <TableCell>
-                  <div class="font-mono text-sm text-blue-600 dark:text-blue-400">
-                    {{ detalle.catalogoCuenta?.codigo || detalle.catalogo_cuenta_id }}
-                  </div>
-                  <div class="text-xs text-gray-500 dark:text-gray-400">
-                    {{ detalle.catalogoCuenta?.nombre || '' }}
-                  </div>
+                <!-- USAR .cuenta EN LUGAR DE .nombre -->
+                <div class="text-sm font-medium text-gray-900 dark:text-gray-100">
+                    {{ detalle.catalogo_cuenta?.cuenta || 'Cuenta no disponible' }}
+                </div>
                 </TableCell>
                 <TableCell class="text-gray-800 dark:text-gray-200">
                   {{ detalle.description }}

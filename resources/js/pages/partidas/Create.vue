@@ -3,6 +3,7 @@ import AppLayout from '@/layouts/AppLayout.vue';
 import { type BreadcrumbItem } from '@/types';
 import Label from '@/components/ui/label/Label.vue';
 import Input from '@/components/ui/input/Input.vue';
+import CurrencyInput from '@/components/ui/input/CurrencyInput.vue';
 import { Head, useForm, usePage } from '@inertiajs/vue3';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -78,8 +79,16 @@ const eliminarDetalle = (i: number) => {
 };
 
 const handleSubmit = () => {
-    // Validación eliminada - ahora puede guardar sin estar balanceada
     form.submit(store());
+};
+
+// Función de formato para totales
+const formatNumber = (value: number | null): string => {
+    if (value === null || value === undefined || value === 0) return '0.00';
+    return new Intl.NumberFormat('en-US', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    }).format(value);
 };
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -88,15 +97,11 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 </script>
 
-
 <template>
-
     <Head title="Listado de Partidas" />
 
     <AppLayout :breadcrumbs="breadcrumbs">
-
         <div class="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4 bg-white dark:bg-black">
-
             <header class="flex items-center justify-between">
                 <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Nueva Partida</h1>
             </header>
@@ -106,7 +111,7 @@ const breadcrumbs: BreadcrumbItem[] = [
                 class="flex items-center gap-2 p-4 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg">
                 <AlertTriangle class="w-5 h-5 text-yellow-600 dark:text-yellow-500" />
                 <p class="text-sm text-yellow-800 dark:text-yellow-200">
-                    La partida no está balanceada. Diferencia: <strong>{{ diferencia.toFixed(2) }}</strong>
+                    La partida no está balanceada. Diferencia: <strong>{{ formatNumber(diferencia) }}</strong>
                 </p>
             </div>
 
@@ -166,6 +171,7 @@ const breadcrumbs: BreadcrumbItem[] = [
                         <Checkbox v-model="form.estado" :default-value="true" />
                     </div>
                 </div>
+
                 <div class="mt-8">
                     <div class="flex items-center justify-between mb-4">
                         <h2 class="text-xl font-semibold">Detalles de la Partida</h2>
@@ -185,7 +191,6 @@ const breadcrumbs: BreadcrumbItem[] = [
                                     <th class="px-4 py-3 text-right">Haber</th>
                                     <th class="px-4 py-3 text-right">Observaciones</th>
                                     <th class="px-4 py-3 text-right">Accion</th>
-                                    <th class="px-4 py-3"></th>
                                 </tr>
                             </thead>
 
@@ -207,11 +212,9 @@ const breadcrumbs: BreadcrumbItem[] = [
                                     </td>
                                     <td class="px-4 py-2">
                                         <div class="flex flex-col gap-1">
-                                            <Input
-                                                v-model.number="detalle.parcial"
-                                                type="number"
-                                                step="0.01"
-                                                class="w-24 text-right"
+                                            <CurrencyInput
+                                                v-model="detalle.parcial"
+                                                class="w-32 text-right"
                                                 placeholder="0.00"
                                             />
 
@@ -228,19 +231,27 @@ const breadcrumbs: BreadcrumbItem[] = [
                                     </td>
 
                                     <td class="px-4 py-2 text-right">
-                                        <Input v-model.number="detalle.monto_debe" type="number" step="0.01"
-                                            placeholder="0.00" class="w-24 text-right" @input="
-                                                detalle.monto_haber = 0;
-                                            detalle.tipo_movimiento = detalle.monto_debe > 0 ? 'DEBE' : '';
-                                            " />
+                                        <CurrencyInput
+                                            v-model="detalle.monto_debe"
+                                            placeholder="0.00"
+                                            class="w-32 text-right"
+                                            @update:model-value="
+                                                detalle.monto_haber = null;
+                                                detalle.tipo_movimiento = detalle.monto_debe > 0 ? 'DEBE' : '';
+                                            "
+                                        />
                                     </td>
 
                                     <td class="px-4 py-2 text-right">
-                                        <Input v-model.number="detalle.monto_haber" type="number" step="0.01"
-                                            placeholder="0.00" class="w-24 text-right" @input="
-                                                detalle.monto_debe = 0;
-                                            detalle.tipo_movimiento = detalle.monto_haber > 0 ? 'HABER' : '';
-                                            " />
+                                        <CurrencyInput
+                                            v-model="detalle.monto_haber"
+                                            placeholder="0.00"
+                                            class="w-32 text-right"
+                                            @update:model-value="
+                                                detalle.monto_debe = null;
+                                                detalle.tipo_movimiento = detalle.monto_haber > 0 ? 'HABER' : '';
+                                            "
+                                        />
                                     </td>
                                     <td class="p-2">
                                         <Input v-model="detalle.observaciones" placeholder="Notas..." class="w-full" />
@@ -257,28 +268,27 @@ const breadcrumbs: BreadcrumbItem[] = [
                             <tfoot class="bg-gray-100 dark:bg-gray-900 font-semibold">
                                 <tr>
                                     <td colspan="3" class="px-4 py-3 text-right">Totales:</td>
-                                    <td class="px-4 py-3 text-right">{{ totalDebe.toFixed(2) }}</td>
-                                    <td class="px-4 py-3 text-right">{{ totalHaber.toFixed(2) }}</td>
-                                    <td></td>
+                                    <td class="px-4 py-3 text-right">{{ formatNumber(totalDebe) }}</td>
+                                    <td class="px-4 py-3 text-right">{{ formatNumber(totalHaber) }}</td>
+                                    <td colspan="2"></td>
                                 </tr>
                                 <tr>
                                     <td colspan="3" class="px-4 py-3 text-right">Diferencia:</td>
                                     <td colspan="2" class="px-4 py-3 text-right"
                                         :class="Math.abs(diferencia) < 0.01 ? 'text-green-600' : 'text-red-600'">
-                                        {{ diferencia.toFixed(2) }}
+                                        {{ formatNumber(diferencia) }}
                                     </td>
-                                    <td></td>
+                                    <td colspan="2"></td>
                                 </tr>
                             </tfoot>
-
                         </table>
                     </div>
                 </div>
+
                 <div class="mt-8 flex justify-end">
                     <Button type="submit">Guardar Partida</Button>
                 </div>
             </form>
         </div>
-
     </AppLayout>
 </template>

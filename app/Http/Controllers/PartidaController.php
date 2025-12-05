@@ -83,7 +83,7 @@ class PartidaController extends Controller
 
     public function show(Partida $partida)
     {
-        $partida->load('detalles');
+        $partida->load(['detalles.catalogoCuenta', 'periodoFiscal']);
 
         return Inertia::render('partidas/Show', compact('partida'));
     }

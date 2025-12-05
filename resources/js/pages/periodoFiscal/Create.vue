@@ -134,7 +134,7 @@ const Field = ({ label, req = false, error }: any) => `
 
                         <div class="space-y-2">
                             <label class="text-sm font-medium text-gray-900 dark:text-white">Fecha de Cierre <span class="text-red-500">*</span></label>
-                            <input v-model="form.fecha_cierre" @blur="validate('fecha_cierre')" @change="autoGenerar(); validate('fecha_cierre')" type="date" :min="form.fecha_inicio || '2000-01-01'" :max="today" class="w-full px-3 py-2 border rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500" :class="errors.fecha_cierre || form.errors.fecha_cierre ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'" />
+                            <input v-model="form.fecha_cierre" @blur="validate('fecha_cierre')" @change="autoGenerar(); validate('fecha_cierre')" type="date" :min="form.fecha_inicio || '2000-01-01'" class="w-full px-3 py-2 border rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500" :class="errors.fecha_cierre || form.errors.fecha_cierre ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'" />
                             <div v-if="errors.fecha_cierre || form.errors.fecha_cierre" class="text-red-600 dark:text-red-400 text-sm">{{ errors.fecha_cierre || form.errors.fecha_cierre }}</div>
                         </div>
 

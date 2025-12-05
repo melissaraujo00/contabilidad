@@ -44,7 +44,7 @@ class CatalogoCuentaSeeder extends Seeder
             ['codigo' => '111103',   'cuenta' => 'Papelería y Útiles',                  'cuenta_padre_id' => 25],
             ['codigo' => '111104',   'cuenta' => 'Pago a Cuenta',                       'cuenta_padre_id' => 25],
             ['codigo' => '111105',   'cuenta' => 'Otros Gastos Pagados por Anticipados', 'cuenta_padre_id' => 25],
-            ['codigo' => '1112',     'cuenta' => 'CREDITO FISCAL',                      'cuenta_padre_id' => 2],
+            ['codigo' => '1112',     'cuenta' => 'IVA CREDITO FISCAL',                      'cuenta_padre_id' => 2],
             ['codigo' => '1113',     'cuenta' => 'IVA PAGADO POR ANTICIPADO',           'cuenta_padre_id' => 2],
             ['codigo' => '111301',   'cuenta' => 'IVA Percibido',                       'cuenta_padre_id' => 32],
             ['codigo' => '111302',   'cuenta' => 'IVA Retenido',                        'cuenta_padre_id' => 32],

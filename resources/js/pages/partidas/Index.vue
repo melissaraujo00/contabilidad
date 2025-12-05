@@ -11,7 +11,8 @@ import {
     TableRow,
 } from '@/components/ui/table'
 
-const { partidas } = usePage().props
+// Asumimos que 'partidas' viene con la estructura de paginación de Laravel (data, links, etc.)
+const { partidas } = usePage().props as any;
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -54,7 +55,7 @@ const breadcrumbs: BreadcrumbItem[] = [
                                 Fecha Partida
                             </TableHead>
                             <TableHead class="font-semibold text-gray-700 dark:text-gray-300">
-                               Periodo Fiscal
+                                Periodo Fiscal
                             </TableHead>
                             <TableHead class="font-semibold text-gray-700 dark:text-gray-300">
                                 Tipo
@@ -73,62 +74,75 @@ const breadcrumbs: BreadcrumbItem[] = [
                             </TableHead>
                         </TableRow>
                     </TableHeader>
-          <TableBody>
-            <TableRow
-              v-for="partida in partidas.data"
-              :key="partida.id"
-              class="hover:bg-gray-50/50 dark:hover:bg-gray-900/50 transition-colors duration-150 border-b border-gray-200 dark:border-gray-800"
-            >
-              <TableCell class="font-medium text-gray-600 dark:text-gray-400">
-                {{ partida.id }}
-              </TableCell>
-              <TableCell class="font-mono text-sm text-blue-600 dark:text-blue-400">
-                {{ partida.partida_numero }}
-              </TableCell>
-              <TableCell class="text-gray-800 dark:text-gray-200">
-                {{ partida.fecha_partida }}
-              </TableCell>
-              <TableCell class="text-gray-600 dark:text-gray-400">
-                {{ partida.periodoFiscal?.fecha_inicio ?? '' }} -
-                {{ partida.periodoFiscal?.fecha_cierre ?? '' }}
-              </TableCell>
-              <TableCell class="text-gray-600 dark:text-gray-400">
-                {{ partida.tipo_partida }}
-              </TableCell>
-              <TableCell class="text-gray-600 dark:text-gray-400">
-                $ {{ partida.total_debe }}
-              </TableCell>
-              <TableCell class="text-gray-600 dark:text-gray-400">
-                $ {{ partida.total_haber }}
-              </TableCell>
-              <TableCell>
-                <span
-                  :class="[
-                    'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium',
-                    partida.estado
-                      ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
-                      : 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400'
-                  ]"
-                >
-                  {{ partida.estado ? 'Activa' : 'Inactiva' }}
-                </span>
-              </TableCell>
-                        <TableCell class="text-left">
-                            <div class="flex justify-start gap-2">
-                                <Link :href="`/partidas/${partida.id}`" class="p-1.5 text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded" title="Ver detalles">
+                    <TableBody>
+                        <TableRow v-for="partida in partidas.data" :key="partida.id"
+                            class="hover:bg-gray-50/50 dark:hover:bg-gray-900/50 transition-colors duration-150 border-b border-gray-200 dark:border-gray-800">
+                            <TableCell class="font-medium text-gray-600 dark:text-gray-400">
+                                {{ partida.id }}
+                            </TableCell>
+                            <TableCell class="font-mono text-sm text-blue-600 dark:text-blue-400">
+                                {{ partida.partida_numero }}
+                            </TableCell>
+                            <TableCell class="text-gray-800 dark:text-gray-200">
+                                {{ partida.fecha_partida }}
+                            </TableCell>
+                            <TableCell class="text-gray-600 dark:text-gray-400">
+                                {{ partida.periodoFiscal?.fecha_inicio ?? '' }} -
+                                {{ partida.periodoFiscal?.fecha_cierre ?? '' }}
+                            </TableCell>
+                            <TableCell class="text-gray-600 dark:text-gray-400">
+                                {{ partida.tipo_partida }}
+                            </TableCell>
+                            <TableCell class="text-gray-600 dark:text-gray-400">
+                                $ {{ partida.total_debe }}
+                            </TableCell>
+                            <TableCell class="text-gray-600 dark:text-gray-400">
+                                $ {{ partida.total_haber }}
+                            </TableCell>
+                            <TableCell>
+                                <span :class="[
+                                    'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium',
+                                    partida.estado
+                                        ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
+                                        : 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400'
+                                ]">
+                                    {{ partida.estado ? 'Activa' : 'Inactiva' }}
+                                </span>
+                            </TableCell>
+                            <TableCell class="text-left">
+                                <div class="flex justify-start gap-2">
+                                    <Link :href="`/partidas/${partida.id}`"
+                                        class="p-1.5 text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded"
+                                        title="Ver detalles">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                                     </svg>
-                                </Link>
-                            </div>
-                        </TableCell>
-            </TableRow>
-          </TableBody>
+                                    </Link>
+                                </div>
+                            </TableCell>
+                        </TableRow>
+                    </TableBody>
                 </Table>
             </div>
-        </div>
+
+            <div v-if="partidas.links && partidas.links.length > 3" class="flex justify-center mt-4">
+                <div class="flex flex-wrap gap-1">
+                    <template v-for="(link, key) in partidas.links" :key="key">
+                        <div v-if="link.url === null"
+                            class="mb-1 mr-1 px-4 py-2 text-sm leading-4 text-gray-400 border rounded dark:border-gray-700"
+                            v-html="link.label" />
+
+                        <Link v-else
+                            :href="link.url"
+                            class="mb-1 mr-1 px-4 py-2 text-sm leading-4 border rounded hover:bg-gray-100 focus:border-blue-500 focus:text-blue-500 dark:border-gray-700 dark:hover:bg-gray-800 dark:text-gray-300"
+                            :class="{ 'bg-blue-600 text-white hover:!bg-blue-700 dark:bg-blue-600 dark:hover:!bg-blue-700': link.active }"
+                            v-html="link.label" />
+                    </template>
+                </div>
+            </div>
+            </div>
     </AppLayout>
 </template>
